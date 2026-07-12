@@ -3,1093 +3,1004 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>智汇管家 · 小区客户管理系统</title>
+    <title>智慧客户管理系统</title>
     <style>
-    /* ============================================================
-     * 智汇管家 · 小区客户管理系统
-     * 设计风格：2027科技风 · 温馨商务 · 渐变玻璃拟态
-     * 作者：军哥懂保 | 微信：xunijiayuan
-     * ============================================================ */
-
-    /* ====== CSS变量（主题色系，方便后续修改） ====== */
-    :root {
-        --primary: #6366f1;           /* 主色-紫罗兰 */
-        --primary-light: #818cf8;
-        --primary-dark: #4f46e5;
-        --secondary: #06b6d4;         /* 辅色-青色 */
-        --accent: #f59e0b;            /* 强调色-琥珀 */
-        --success: #10b981;           /* 成功-翡翠绿 */
-        --danger: #ef4444;            /* 危险-红色 */
-        --neutral: #64748b;          /* 中性-灰蓝 */
-        --bg-body: #0f172a;          /* 全局背景-深空蓝 */
-        --bg-card: rgba(30, 41, 59, 0.7); /* 卡片背景-半透明 */
-        --bg-glass: rgba(255,255,255,0.05); /* 玻璃拟态 */
-        --text-primary: #f1f5f9;      /* 主文字 */
-        --text-secondary: #94a3b8;    /* 副文字 */
-        --text-muted: #64748b;         /* 弱文字 */
-        --border: rgba(148,163,184,0.15); /* 边框 */
-        --glow: rgba(99,102,241,0.4);  /* 光晕 */
-        --radius: 16px;
-        --radius-sm: 10px;
-        --shadow: 0 8px 32px rgba(0,0,0,0.3);
-    }
-
-    /* ====== 全局重置 ====== */
-    * { margin:0; padding:0; box-sizing:border-box; }
-
-    body {
-        font-family: -apple-system, "SF Pro Display", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
-        background: var(--bg-body);
-        color: var(--text-primary);
-        line-height: 1.6;
-        min-height: 100vh;
-        overflow-x: hidden;
-    }
-
-    /* ====== 动态背景 ====== */
-    .bg-animation {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        z-index: 0;
-        pointer-events: none;
-        overflow: hidden;
-    }
-    .bg-animation .orb {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(80px);
-        opacity: 0.3;
-        animation: orbFloat 20s ease-in-out infinite;
-    }
-    .bg-animation .orb:nth-child(1) {
-        width: 500px; height: 500px;
-        background: var(--primary);
-        top: -10%; left: -5%;
-        animation-delay: 0s;
-    }
-    .bg-animation .orb:nth-child(2) {
-        width: 400px; height: 400px;
-        background: var(--secondary);
-        top: 50%; right: -10%;
-        animation-delay: -7s;
-    }
-    .bg-animation .orb:nth-child(3) {
-        width: 350px; height: 350px;
-        background: var(--accent);
-        bottom: -5%; left: 30%;
-        animation-delay: -14s;
-        opacity: 0.15;
-    }
-    @keyframes orbFloat {
-        0%, 100% { transform: translate(0, 0) scale(1); }
-        33% { transform: translate(50px, -30px) scale(1.1); }
-        66% { transform: translate(-30px, 40px) scale(0.9); }
-    }
-
-    /* ====== 主容器 ====== */
-    .app-container {
-        position: relative;
-        z-index: 1;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    /* ====== 头部 ====== */
-    .app-header {
-        background: var(--bg-card);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 30px;
-        margin-bottom: 24px;
-        box-shadow: var(--shadow);
-        position: relative;
-        overflow: hidden;
-    }
-    .app-header::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
-    }
-    .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-    .header-brand h1 {
-        font-size: 28px;
-        font-weight: 700;
-        background: linear-gradient(135deg, var(--primary-light), var(--secondary));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        letter-spacing: 1px;
-    }
-    .header-brand .subtitle {
-        font-size: 13px;
-        color: var(--text-secondary);
-        margin-top: 4px;
-    }
-    .header-meta {
-        display: flex;
-        gap: 16px;
-        align-items: center;
-        flex-wrap: wrap;
-    }
-    .meta-tag {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 12px;
-        color: var(--text-muted);
-        background: var(--bg-glass);
-        border: 1px solid var(--border);
-        padding: 5px 12px;
-        border-radius: 20px;
-    }
-    .meta-tag .dot {
-        width: 6px; height: 6px;
-        border-radius: 50%;
-        background: var(--success);
-        animation: pulse 2s ease-in-out infinite;
-    }
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.4; }
-    }
-    .author-badge {
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        color: #fff;
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 500;
-        white-space: nowrap;
-    }
-
-    /* ====== 通用卡片 ====== */
-    .card {
-        background: var(--bg-card);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 24px;
-        margin-bottom: 24px;
-        box-shadow: var(--shadow);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .card:hover {
-        box-shadow: 0 12px 40px rgba(0,0,0,0.35);
-    }
-    .card-title {
-        font-size: 16px;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 18px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .card-title .icon {
-        width: 32px; height: 32px;
-        border-radius: var(--radius-sm);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-    }
-    .card-title .icon-search { background: rgba(99,102,241,0.2); color: var(--primary-light); }
-    .card-title .icon-form { background: rgba(6,182,212,0.2); color: var(--secondary); }
-    .card-title .icon-table { background: rgba(245,158,11,0.2); color: var(--accent); }
-    .card-title .icon-history { background: rgba(16,185,129,0.2); color: var(--success); }
-
-    /* ====== 搜索筛选区 ====== */
-    .search-row {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        align-items: flex-end;
-    }
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        flex: 1;
-        min-width: 180px;
-    }
-    .form-group label {
-        font-size: 12px;
-        color: var(--text-secondary);
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    .form-control {
-        background: var(--bg-glass);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-sm);
-        padding: 10px 14px;
-        color: var(--text-primary);
-        font-size: 14px;
-        outline: none;
-        transition: all 0.2s;
-    }
-    .form-control:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px var(--glow);
-    }
-    .form-control::placeholder {
-        color: var(--text-muted);
-    }
-
-    /* ====== 表单区 ====== */
-    .form-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-    }
-    .form-group .required-mark {
-        color: var(--danger);
-        margin-left: 2px;
-    }
-    .form-control.error {
-        border-color: var(--danger);
-        box-shadow: 0 0 0 3px rgba(239,68,68,0.2);
-        background: rgba(239,68,68,0.05);
-    }
-    .editing-indicator {
-        display: none;
-        background: rgba(245,158,11,0.1);
-        border: 1px solid rgba(245,158,11,0.3);
-        color: var(--accent);
-        padding: 10px 16px;
-        border-radius: var(--radius-sm);
-        margin-bottom: 16px;
-        font-size: 13px;
-        align-items: center;
-        gap: 8px;
-    }
-    .editing-indicator.show { display: flex; }
-
-    /* ====== 按钮系统 ====== */
-    .btn-group {
-        grid-column: 1 / -1;
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-top: 6px;
-    }
-    .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        padding: 10px 22px;
-        border: none;
-        border-radius: var(--radius-sm);
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s;
-        white-space: nowrap;
-        position: relative;
-        overflow: hidden;
-    }
-    .btn:active { transform: scale(0.97); }
-    .btn-primary {
-        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-        color: #fff;
-        box-shadow: 0 4px 15px rgba(99,102,241,0.3);
-    }
-    .btn-primary:hover { box-shadow: 0 6px 20px rgba(99,102,241,0.4); }
-    .btn-danger {
-        background: linear-gradient(135deg, var(--danger), #dc2626);
-        color: #fff;
-        box-shadow: 0 4px 15px rgba(239,68,68,0.3);
-    }
-    .btn-success {
-        background: linear-gradient(135deg, var(--success), #059669);
-        color: #fff;
-        box-shadow: 0 4px 15px rgba(16,185,129,0.3);
-    }
-    .btn-neutral {
-        background: var(--bg-glass);
-        color: var(--text-secondary);
-        border: 1px solid var(--border);
-    }
-    .btn-neutral:hover { background: rgba(255,255,255,0.1); }
-    .btn-sm {
-        padding: 6px 14px;
-        font-size: 12px;
-        border-radius: 8px;
-    }
-
-    /* ====== 统计栏 ====== */
-    .stats-bar {
-        display: flex;
-        gap: 16px;
-        margin-bottom: 16px;
-        flex-wrap: wrap;
-    }
-    .stat-chip {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        background: var(--bg-glass);
-        border: 1px solid var(--border);
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 13px;
-        color: var(--text-secondary);
-    }
-    .stat-chip strong {
-        color: var(--primary-light);
-        font-weight: 600;
-    }
-
-    /* ====== 表格 ====== */
-    .table-wrap { overflow-x: auto; }
-    table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        font-size: 13px;
-    }
-    thead th {
-        background: rgba(99,102,241,0.12);
-        color: var(--primary-light);
-        font-weight: 600;
-        text-align: center;
-        padding: 14px 12px;
-        border-bottom: 1px solid var(--border);
-        white-space: nowrap;
-        position: sticky;
-        top: 0;
-    }
-    thead th:first-child { border-radius: var(--radius-sm) 0 0 0; }
-    thead th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
-    tbody td {
-        padding: 12px;
-        text-align: center;
-        border-bottom: 1px solid rgba(148,163,184,0.08);
-        color: var(--text-secondary);
-    }
-    tbody tr { transition: background 0.15s; }
-    tbody tr:hover { background: rgba(99,102,241,0.06); }
-    tbody tr:nth-child(even) { background: rgba(255,255,255,0.02); }
-    tbody tr:nth-child(even):hover { background: rgba(99,102,241,0.06); }
-    .empty-state td {
-        padding: 50px 20px;
-        color: var(--text-muted);
-        font-style: italic;
-        font-size: 14px;
-    }
-
-    /* ====== 弹窗 ====== */
-    .modal-mask {
-        display: none;
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.6);
-        backdrop-filter: blur(4px);
-        z-index: 1000;
-        justify-content: center;
-        align-items: center;
-    }
-    .modal-mask.show { display: flex; }
-    .modal-box {
-        background: linear-gradient(135deg, rgba(30,41,59,0.95), rgba(15,23,42,0.95));
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 32px;
-        width: 400px;
-        text-align: center;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    }
-    .modal-box p { color: var(--text-secondary); margin-bottom: 24px; font-size: 15px; }
-    .modal-btns { display: flex; gap: 12px; justify-content: center; }
-
-    /* ====== Toast提示 ====== */
-    .toast {
-        display: none;
-        position: fixed;
-        top: 24px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 12px 28px;
-        border-radius: 12px;
-        font-size: 14px;
-        color: #fff;
-        z-index: 2000;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-        backdrop-filter: blur(10px);
-    }
-    .toast.show {
-        display: block;
-        animation: toastIn 2.5s ease;
-    }
-    .toast-success { background: linear-gradient(135deg, rgba(16,185,129,0.9), rgba(5,150,105,0.9)); }
-    .toast-warning { background: linear-gradient(135deg, rgba(245,158,11,0.9), rgba(217,119,6,0.9)); }
-    .toast-error { background: linear-gradient(135deg, rgba(239,68,68,0.9), rgba(220,38,38,0.9)); }
-    .toast-info { background: linear-gradient(135deg, rgba(99,102,241,0.9), rgba(79,70,229,0.9)); }
-    @keyframes toastIn {
-        0% { opacity:0; transform: translateX(-50%) translateY(-20px); }
-        12% { opacity:1; transform: translateX(-50%) translateY(0); }
-        88% { opacity:1; transform: translateX(-50%) translateY(0); }
-        100% { opacity:0; transform: translateX(-50%) translateY(-20px); }
-    }
-
-    /* ====== 历史记录/操作记忆 ====== */
-    .history-list {
-        max-height: 280px;
-        overflow-y: auto;
-        scrollbar-width: thin;
-        scrollbar-color: var(--primary) transparent;
-    }
-    .history-list::-webkit-scrollbar { width: 4px; }
-    .history-list::-webkit-scrollbar-track { background: transparent; }
-    .history-list::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
-    .history-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 14px;
-        border-radius: var(--radius-sm);
-        background: var(--bg-glass);
-        border: 1px solid var(--border);
-        margin-bottom: 8px;
-        cursor: pointer;
-        transition: all 0.15s;
-        font-size: 13px;
-    }
-    .history-item:hover {
-        border-color: var(--primary);
-        background: rgba(99,102,241,0.08);
-    }
-    .history-item .action { color: var(--primary-light); font-weight: 500; }
-    .history-item .detail { color: var(--text-muted); }
-    .history-item .time { color: var(--text-muted); font-size: 11px; white-space: nowrap; }
-
-    /* ====== 底部信息 ====== */
-    .app-footer {
-        text-align: center;
-        padding: 20px;
-        font-size: 12px;
-        color: var(--text-muted);
-    }
-    .app-footer a { color: var(--primary-light); text-decoration: none; }
-
-    /* ====== 响应式 ====== */
-    @media (max-width: 900px) {
-        .form-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 600px) {
-        .app-container { padding: 12px; }
-        .form-grid { grid-template-columns: 1fr; }
-        .header-content { flex-direction: column; align-items: flex-start; }
-        .header-meta { width: 100%; }
-        .search-row { flex-direction: column; }
-        .form-group { min-width: 100%; }
-        .stats-bar { flex-direction: column; }
-        .btn-group { flex-direction: column; }
-        .btn-group .btn { width: 100%; }
-        .app-header { padding: 20px; }
-        .card { padding: 18px; }
-    }
+        * { margin: 0; padding: 0; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+        html, body { width: 100%; overflow-x: hidden; }
+        body { font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); min-height: 100vh; color: #f1f5f9; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; width: 100%; }
+        header { text-align: center; padding: 20px 0; border-bottom: 1px solid rgba(59,130,246,0.2); margin-bottom: 20px; width: 100%; }
+        header h1 { font-size: 28px; background: linear-gradient(90deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; word-break: break-all; }
+        header p { font-size: 13px; color: #94a3b8; margin-top: 5px; }
+        .meta-bar { text-align: center; font-size: 12px; color: #64748b; margin-bottom: 15px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 8px; width: 100%; word-break: break-all; }
+        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
+        .card { background: rgba(30,41,59,0.8); border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .card-title { font-size: 16px; font-weight: 600; color: #cbd5e1; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .card-title .icon { font-size: 20px; }
+        .icon-form::before { content: "\1F464"; }
+        .icon-list::before { content: "\1F39E"; }
+        .icon-chart::before { content: "\1F4CA"; }
+        .icon-history::before { content: "\1F4DD"; }
+        .icon-table::before { content: "\1F3E0"; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 4px; }
+        .form-control { width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(148,163,184,0.15); border-radius: 10px; color: #f1f5f9; font-size: 14px; outline: none; transition: border-color 0.2s; }
+        .form-control:focus { border-color: #3b82f6; }
+        .btn { padding: 10px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .btn-primary { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .btn-success:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(16,185,129,0.4); }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+        .btn-danger:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239,68,68,0.4); }
+        .btn-neutral { background: rgba(148,163,184,0.1); color: #cbd5e1; }
+        .btn-neutral:hover { background: rgba(148,163,184,0.2); }
+        .btn-sm { padding: 6px 16px; font-size: 13px; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+        .search-box { display: flex; gap: 10px; margin-bottom: 16px; }
+        .search-box input { flex: 1; }
+        .filter-row { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+        .filter-row select { flex: 1; min-width: 150px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid rgba(148,163,184,0.1); }
+        th { background: rgba(59,130,246,0.1); color: #93c5fd; font-weight: 500; }
+        tr:hover { background: rgba(59,130,246,0.05); }
+        .action-btns { display: flex; gap: 6px; }
+        .action-btns button { padding: 4px 10px; font-size: 12px; }
+        .stats-row { display: -webkit-box; display: -ms-flexbox; display: flex; gap: 12px; width: 100%; }
+        .stat-item { background: rgba(59,130,246,0.1); border-radius: 12px; padding: 18px 12px; text-align: center; -webkit-box-flex: 1; -ms-flex: 1; flex: 1 1 33.333%; min-width: 0; }
+        .stat-item .stat-value { font-size: 24px; font-weight: 700; color: #3b82f6; }
+        .stat-item .stat-label { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+        .community-management { grid-column: 1/-1; margin-top: 8px; padding: 16px; background: rgba(59,130,246,0.05); border: 1px solid rgba(59,130,246,0.2); border-radius: 12px; }
+        .community-management-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .community-management-title { font-size: 14px; font-weight: 600; color: #60a5fa; display: flex; align-items: center; gap: 6px; }
+        .community-management-title::before { content: "\1F3E0"; }
+        .community-add-row { display: flex; gap: 10px; margin-bottom: 12px; }
+        .community-add-input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(148,163,184,0.15); border-radius: 10px; padding: 10px 14px; color: #f1f5f9; font-size: 14px; outline: none; }
+        .community-add-input:focus { border-color: #3b82f6; }
+        .community-search-row { margin-bottom: 12px; }
+        .community-search-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(148,163,184,0.15); border-radius: 10px; padding: 10px 14px; color: #f1f5f9; font-size: 13px; outline: none; }
+        .community-search-input:focus { border-color: #60a5fa; }
+        .community-list-wrap { display: flex; flex-wrap: wrap; gap: 10px; }
+        .community-tag { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); border-radius: 20px; font-size: 13px; color: #93c5fd; transition: all 0.2s; }
+        .community-tag:hover { background: rgba(59,130,246,0.25); border-color: rgba(59,130,246,0.5); }
+        .community-tag .remove-btn { width: 18px; height: 18px; border-radius: 50%; background: rgba(239,68,68,0.2); border: none; color: #f87171; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .community-tag .remove-btn:hover { background: rgba(239,68,68,0.4); color: #ef4444; }
+        .community-tag .edit-btn { width: 18px; height: 18px; border-radius: 50%; background: rgba(59,130,246,0.2); border: none; color: #60a5fa; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .community-tag .edit-btn:hover { background: rgba(59,130,246,0.4); color: #3b82f6; }
+        .community-tag.default-tag { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); color: #6ee7b7; }
+        .community-tag.default-tag .remove-btn { background: rgba(16,185,129,0.2); color: #34d399; }
+        .birthday-calc-group { grid-column: 1/-1; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; padding: 12px; background: rgba(99,102,241,0.05); border: 1px dashed rgba(99,102,241,0.3); border-radius: 12px; margin-top: 8px; }
+        .birthday-calc-group .form-group { margin-bottom: 0; }
+        .calc-btn { width: 100%; }
+        .calc-result-input { background: rgba(99,102,241,0.1) !important; border-color: rgba(99,102,241,0.4) !important; color: #a5b4fc !important; font-weight: 600; }
+        .form-control[type="date"] { color: #f1f5f9; background: rgba(255,255,255,0.05); border: 1px solid rgba(148,163,184,0.15); }
+        .form-control[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.6; }
+        .insurance-section { grid-column: 1/-1; margin-top: 8px; padding: 16px; background: rgba(168,85,247,0.05); border: 1px solid rgba(168,85,247,0.2); border-radius: 12px; }
+        .insurance-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .insurance-header span { font-size: 14px; font-weight: 600; color: #c4b5fd; }
+        .insurance-types-wrap { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+        .insurance-type-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3); border-radius: 16px; font-size: 13px; color: #c4b5fd; cursor: pointer; transition: all 0.2s; }
+        .insurance-type-tag:hover { background: rgba(168,85,247,0.25); }
+        .insurance-type-tag.selected { background: rgba(168,85,247,0.4); border-color: rgba(168,85,247,0.7); color: #fff; }
+        .insurance-type-tag input[type="checkbox"] { display: none; }
+        .insurance-add-row { display: flex; gap: 10px; }
+        .insurance-add-input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(148,163,184,0.15); border-radius: 10px; padding: 8px 12px; color: #f1f5f9; font-size: 13px; outline: none; }
+        .insurance-add-input:focus { border-color: #a855f7; }
+        .visit-section { grid-column: 1/-1; margin-top: 8px; padding: 16px; background: rgba(236,72,153,0.05); border: 1px solid rgba(236,72,153,0.2); border-radius: 12px; }
+        .visit-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .visit-header span { font-size: 14px; font-weight: 600; color: #fb7185; }
+        .visit-count { font-size: 13px; color: #fb7185; }
+        .visit-add-form { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+        .visit-date-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(148,163,184,0.15); border-radius: 10px; padding: 8px 12px; color: #f1f5f9; font-size: 13px; outline: none; min-width: 140px; }
+        .visit-note-input { flex: 1; min-width: 200px; background: rgba(255,255,255,0.05); border: 1px solid rgba(148,163,184,0.15); border-radius: 10px; padding: 8px 12px; color: #f1f5f9; font-size: 13px; outline: none; resize: vertical; min-height: 40px; }
+        .visit-list { max-height: 200px; overflow-y: auto; }
+        .visit-item { padding: 10px 14px; background: rgba(236,72,153,0.1); border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; }
+        .visit-item:hover { background: rgba(236,72,153,0.15); }
+        .visit-item-header { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #fb7185; }
+        .visit-item-content { margin-top: 6px; font-size: 12px; color: #cbd5e1; display: none; padding-top: 6px; border-top: 1px solid rgba(236,72,153,0.2); }
+        .visit-item.expanded .visit-item-content { display: block; }
+        .import-section { grid-column: 1/-1; display: flex; align-items: center; gap: 12px; margin-top: 8px; padding: 12px 16px; background: rgba(34,197,94,0.05); border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; }
+        .import-btn { position: relative; overflow: hidden; }
+        .import-file-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .toast { position: fixed; top: 20px; right: 20px; padding: 12px 24px; border-radius: 10px; font-size: 14px; z-index: 1000; animation: slideIn 0.3s ease; }
+        .toast.success { background: rgba(16,185,129,0.9); color: white; }
+        .toast.warning { background: rgba(245,158,11,0.9); color: white; }
+        .toast.error { background: rgba(239,68,68,0.9); color: white; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .history-list { max-height: 300px; overflow-y: auto; font-size: 13px; }
+        .history-item { padding: 8px 0; border-bottom: 1px solid rgba(148,163,184,0.1); display: flex; justify-content: space-between; }
+        .history-item:last-child { border-bottom: none; }
+        .history-type { color: #3b82f6; }
+        .history-time { color: #64748b; font-size: 11px; }
+        .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 16px; }
+        .pagination button { padding: 6px 12px; font-size: 12px; }
+        .pagination button.active { background: #3b82f6; color: white; }
+        .pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+        @media (max-width: 768px) {
+            .grid-layout { grid-template-columns: 1fr; display: block; }
+            .grid-layout > .card { width: 100%; margin-bottom: 20px; }
+            .stats-row { gap: 8px; }
+            .stat-item { padding: 14px 6px; }
+            .stat-item .stat-value { font-size: 18px; word-break: break-all; }
+            .stat-item .stat-label { font-size: 11px; }
+            header h1 { font-size: 22px; }
+            header p { font-size: 12px; }
+            .container { padding: 10px; width: 100%; }
+            .card { padding: 15px; width: 100%; }
+            .btn { padding: 8px 16px; font-size: 13px; }
+            .form-control { padding: 8px 12px; font-size: 13px; }
+            .form-group { margin-bottom: 10px; }
+            .btn-group { gap: 6px; margin-top: 12px; }
+            .community-tag { padding: 6px 10px; font-size: 12px; }
+            .insurance-type-tag { padding: 5px 10px; font-size: 12px; }
+            .visit-date-input { min-width: 120px; }
+            .visit-note-input { min-width: 150px; }
+            table { font-size: 12px; }
+            th, td { padding: 6px 8px; }
+            .birthday-calc-group { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-
-    <!-- 动态光球背景 -->
-    <div class="bg-animation">
-        <div class="orb"></div>
-        <div class="orb"></div>
-        <div class="orb"></div>
-    </div>
-
-    <div class="app-container">
-
-        <!-- ====== 头部信息区 ====== -->
-        <header class="app-header">
-            <div class="header-content">
-                <div class="header-brand">
-                    <h1>智汇管家 · 小区客户管理系统</h1>
-                    <div class="subtitle">离线本地版 · 数据持久化 · 无需网络 · 可微信转发</div>
-                </div>
-                <div class="header-meta">
-                    <span class="meta-tag"><span class="dot"></span> 运行中</span>
-                    <span class="meta-tag" id="programSize">程序大小：-- KB</span>
-                    <span class="meta-tag" id="lastModified">上次保存：--</span>
-                    <span class="author-badge">军哥懂保 · 微信: xunijiayuan</span>
-                </div>
-            </div>
+    <div class="container">
+        <header>
+            <h1>智慧客户管理系统</h1>
+            <p>高效管理您的客户资源</p>
         </header>
+        <div class="meta-bar" id="metaBar">程序大小: 0 KB | 上次修改: -- | 作者: 军哥懂保 (微信: xunijiayuan)</div>
 
-        <!-- ====== 搜索筛选区 ====== -->
         <section class="card">
-            <div class="card-title">
-                <span class="icon icon-search">&#128269;</span> 搜索筛选
-            </div>
-            <div class="search-row">
-                <div class="form-group">
-                    <label>姓名搜索</label>
-                    <input class="form-control" type="text" id="searchName" placeholder="输入姓名模糊匹配" oninput="renderTable()">
-                </div>
-                <div class="form-group">
-                    <label>筛选小区</label>
-                    <select class="form-control" id="filterCommunity" onchange="renderTable()">
-                        <option value="">全部小区</option>
-                    </select>
-                </div>
-                <div class="form-group" style="flex:0; min-width:auto;">
-                    <label>&nbsp;</label>
-                    <button class="btn btn-neutral" onclick="clearSearch()">重置</button>
-                </div>
+            <div class="stats-row">
+                <div class="stat-item"><div class="stat-value" id="totalCount">0</div><div class="stat-label">总客户数</div></div>
+                <div class="stat-item"><div class="stat-value" id="todayCount">0</div><div class="stat-label">今日新增</div></div>
+                <div class="stat-item"><div class="stat-value" id="communityCount">0</div><div class="stat-label">小区数量</div></div>
             </div>
         </section>
 
-        <!-- ====== 信息填写表单区 ====== -->
-        <section class="card">
-            <div class="card-title">
-                <span class="icon icon-form">&#9998;</span>
-                <span id="formTitle">新增客户</span>
-            </div>
+        <div class="grid-layout">
+            <section class="card" style="grid-column: 1/-1;"><div class="card-title"><span class="icon icon-table"></span> 小区人数统计</div><div class="community-stats" id="communityStats"></div></section>
 
-            <div class="editing-indicator" id="editingBanner">
-                &#9888; 编辑模式 — 修改后点击「保存修改」提交，或点击「清空表单」退出编辑
-            </div>
+            <section class="card" style="grid-column: 1/-1;">
+                <div class="card-title"><span class="icon icon-form"></span> 小区管理</div>
+                <div class="community-management">
+                    <div class="community-management-header">
+                        <span class="community-management-title">小区列表</span>
+                        <span style="font-size:12px; color:#64748b;">共 <span id="communityCountDisplay">0</span> 个小区</span>
+                    </div>
+                    <div class="community-add-row">
+                        <input type="text" class="community-add-input" id="newCommunityName" placeholder="输入新小区名称" onkeydown="if(event.key==='Enter')addCommunity()">
+                        <button class="btn btn-sm btn-primary" onclick="addCommunity()">+ 添加小区</button>
+                    </div>
+                    <div class="community-search-row">
+                        <input type="text" class="community-search-input" id="communitySearch" placeholder="🔍 搜索小区名称..." oninput="renderCommunityList()">
+                    </div>
+                    <div class="community-list-wrap" id="communityList"></div>
+                </div>
+            </section>
 
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>姓名<span class="required-mark">*</span></label>
-                    <input class="form-control" type="text" id="customerName" placeholder="请输入姓名">
-                </div>
-                <div class="form-group">
-                    <label>性别<span class="required-mark">*</span></label>
-                    <select class="form-control" id="customerGender">
-                        <option value="">请选择</option>
-                        <option value="男">男</option>
-                        <option value="女">女</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>年龄</label>
-                    <input class="form-control" type="number" id="customerAge" placeholder="请输入" min="0" max="150">
-                </div>
-                <div class="form-group">
-                    <label>生日</label>
-                    <input class="form-control" type="date" id="customerBirthday">
-                </div>
-                <div class="form-group">
-                    <label>单元楼号</label>
-                    <input class="form-control" type="text" id="customerBuilding" placeholder="如：3栋2单元501">
-                </div>
-                <div class="form-group">
-                    <label>联系电话<span class="required-mark">*</span></label>
-                    <input class="form-control" type="text" id="customerPhone" placeholder="请输入手机号">
-                </div>
-                <div class="form-group">
-                    <label>所属小区<span class="required-mark">*</span></label>
-                    <select class="form-control" id="customerCommunity">
-                        <option value="">请选择</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>&nbsp;</label>
-                    <!-- 占位对齐 -->
-                </div>
-                <div class="btn-group">
-                    <button class="btn btn-primary" id="saveBtn" onclick="saveCustomer()">&#10003; 保存客户</button>
-                    <button class="btn btn-neutral" onclick="clearForm()">&#8634; 清空表单</button>
-                    <button class="btn btn-success" onclick="exportCSV()">&#8681; 导出CSV表格</button>
-                </div>
-            </div>
-        </section>
+            <section class="card">
+                <div class="card-title"><span class="icon icon-form"></span> 客户信息录入</div>
+                <form id="customerForm">
+                    <div class="form-group"><label>姓名 *</label><input class="form-control" type="text" id="customerName" placeholder="请输入客户姓名"></div>
+                    <div class="form-group"><label>性别 *</label><select class="form-control" id="customerGender"><option value="">请选择性别</option><option value="男">男</option><option value="女">女</option></select></div>
 
-        <!-- ====== 客户数据表格区 ====== -->
-        <section class="card">
-            <div class="card-title">
-                <span class="icon icon-table">&#128203;</span> 客户数据列表
-            </div>
-            <div class="stats-bar">
-                <div class="stat-chip">总客户：<strong id="totalCount">0</strong></div>
-                <div class="stat-chip">当前显示：<strong id="filteredCount">0</strong></div>
-            </div>
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>序号</th>
-                            <th>姓名</th>
-                            <th>性别</th>
-                            <th>年龄</th>
-                            <th>生日</th>
-                            <th>单元楼号</th>
-                            <th>联系电话</th>
-                            <th>所属小区</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody"></tbody>
-                </table>
-            </div>
-        </section>
+                    <div class="form-group"><label>出生月份和日期</label><input class="form-control" type="text" id="birthMonthDay" placeholder="格式: MM-DD 如: 06-15" onblur="calculateBirthday()"></div>
+                    <input type="hidden" id="customerBirthday">
 
-        <!-- ====== 操作记忆/历史记录区 ====== -->
-        <section class="card">
-            <div class="card-title">
-                <span class="icon icon-history">&#128337;</span> 操作记忆
-                <span style="margin-left:auto; font-size:12px; color:var(--text-muted); cursor:pointer;" onclick="clearHistory()">清空记录</span>
-            </div>
-            <div class="history-list" id="historyList">
-                <div style="text-align:center; padding:30px; color:var(--text-muted); font-style:italic;">暂无操作记录</div>
-            </div>
-        </section>
+                    <div class="birthday-calc-group">
+                        <div class="form-group"><label>年龄</label><input class="form-control calc-age-input" type="number" id="calcAge" placeholder="输入年龄" min="0" max="150" oninput="calculateBirthday()"></div>
+                        <div class="form-group"><label>&nbsp;</label><button class="btn btn-sm btn-primary calc-btn" type="button" onclick="calculateBirthday()">&#8656; 计算出生年月日</button></div>
+                        <div class="form-group"><label>计算结果</label><input class="form-control calc-result-input" type="text" id="calcResult" placeholder="出生年月日" readonly></div>
+                    </div>
 
-        <!-- 底部 -->
-        <footer class="app-footer">
-            智汇管家 · 小区客户管理系统 v2.0 | 作者：<a href="#">军哥懂保</a> | 微信：xunijiayuan | 程序大小：<span id="footerSize">--</span> KB | 修改时间：<span id="footerTime">--</span>
-        </footer>
-    </div>
+                    <div class="form-group"><label>所属小区 *</label><select class="form-control" id="customerCommunity"><option value="">请选择小区</option></select></div>
+                    <div class="form-group"><label>单元楼号</label><input class="form-control" type="text" id="customerBuilding" placeholder="如: 1栋2单元301"></div>
+                    <div class="form-group"><label>联系电话 *</label><input class="form-control" type="tel" id="customerPhone" placeholder="请输入联系电话"></div>
 
-    <!-- 删除确认弹窗 -->
-    <div class="modal-mask" id="deleteModal">
-        <div class="modal-box">
-            <p>&#9888; 确定要删除该客户记录吗？<br>此操作不可撤销。</p>
-            <div class="modal-btns">
-                <button class="btn btn-danger" onclick="confirmDelete()">确认删除</button>
-                <button class="btn btn-neutral" onclick="closeDeleteModal()">取消</button>
-            </div>
+                    <div class="insurance-section" id="insuranceSection">
+                        <div class="insurance-header"><span>保险险种</span><button class="btn btn-sm btn-neutral" type="button" onclick="toggleSelectAllInsurance()">一键全选</button></div>
+                        <div class="insurance-types-wrap" id="insuranceTypesWrap"></div>
+                        <div class="insurance-add-row">
+                            <input type="text" class="insurance-add-input" id="newInsuranceType" placeholder="输入新险种名称" onkeydown="if(event.key==='Enter')addInsuranceType()">
+                            <button class="btn btn-sm btn-primary" type="button" onclick="addInsuranceType()">+ 添加</button>
+                        </div>
+                    </div>
+
+                    <div class="visit-section" id="visitSection">
+                        <div class="visit-header"><span>见面备注</span><div><span class="visit-count" id="visitCount">0次约访</span><button class="btn btn-sm btn-neutral" type="button" onclick="toggleShowAllVisits()" style="margin-left:8px;">全部展示</button></div></div>
+                        <div class="visit-add-form">
+                            <input type="date" class="visit-date-input" id="visitDate">
+                            <textarea class="visit-note-input" id="visitNote" placeholder="面访记录..."></textarea>
+                            <button class="btn btn-sm btn-primary" type="button" onclick="addVisit()">+ 添加记录</button>
+                        </div>
+                        <div class="visit-list" id="visitList"></div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="saveBtn" type="button" onclick="saveCustomer()">&#10003; 保存客户</button>
+                        <button class="btn btn-neutral" type="button" onclick="clearForm()">&#8634; 清空表单</button>
+                        <button class="btn btn-success" type="button" onclick="exportCSV()">&#8681; 导出CSV</button>
+                        <button class="btn btn-success" type="button" onclick="exportExcel()">&#128203; 导出Excel</button>
+                        <button class="btn btn-success import-btn" type="button">&#8599; 导入数据<input type="file" class="import-file-input" id="importFile" accept=".xls,.xlsx,.csv" onchange="handleFileImport(this)"></button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="card">
+                <div class="card-title"><span class="icon icon-list"></span> 客户列表</div>
+                <div class="search-box">
+                    <input class="form-control" type="text" id="searchInput" placeholder="搜索姓名、电话、小区..." oninput="renderTable()">
+                    <button class="btn btn-neutral" onclick="renderTable()">搜索</button>
+                </div>
+                <div class="filter-row">
+                    <select class="form-control" id="filterCommunity" onchange="renderTable()"><option value="">全部小区</option></select>
+                    <select class="form-control" id="filterGender" onchange="renderTable()"><option value="">全部性别</option><option value="男">男</option><option value="女">女</option></select>
+                </div>
+                <div style="max-height: 500px; overflow-y: auto;">
+                    <table id="customerTable">
+                        <thead><tr><th>序号</th><th>姓名</th><th>性别</th><th>年龄</th><th>出生年月日</th><th>所属小区</th><th>单元楼号</th><th>联系电话</th><th>保险险种</th><th>约访次数</th><th>操作</th></tr></thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="pagination"></div>
+            </section>
+
+            <section class="card" style="grid-column: 1/-1;"><div class="card-title"><span class="icon icon-history"></span> 操作记录</div><div class="history-list" id="historyList"></div></section>
         </div>
     </div>
 
-    <!-- Toast提示 -->
-    <div class="toast" id="toast"></div>
-
-
     <script>
-    /* ============================================================
-     * 智汇管家 · 小区客户管理系统 v2.0
-     * 作者：军哥懂保 | 微信：xunijiayuan
-     * 数据存储：localStorage（离线持久化）
-     * 技术栈：纯原生 HTML + CSS + JavaScript
-     * ============================================================ */
-
-    // ====== 可修改配置区 ======
-    // 如需增删小区，直接修改此数组
-    var COMMUNITY_LIST = [
-        '博雅馨城', '育苗佳苑', '西延锦绣', '红色佳苑', '锦熙玉苑',
-        '西西里公园', '金港湾花园', '福祥瑞康苑', '福祥瑞祥苑', '福祥瑞福苑'
-    ];
-
-    // localStorage 存储键名
-    var STORAGE_KEY = 'zhihui_customer_data';
-    var HISTORY_KEY = 'zhihui_operation_history';
-
-    // 全局状态
+    var CUSTOMER_KEY = "zhihui_customers";
+    var HISTORY_KEY = "zhihui_history";
+    var COMMUNITY_KEY = "zhihui_communities";
+    var INSURANCE_KEY = "zhihui_insurance_types";
+    
+    var DEFAULT_COMMUNITIES = ["博雅馨城", "育苗佳苑", "西延锦绣", "红色佳苑", "锦熙玉苑", "西西里公园", "金港湾花园", "福祥瑞康苑", "福祥瑞祥苑", "福祥瑞福苑"];
+    var DEFAULT_INSURANCE_TYPES = ["保障型", "两全险", "理财险", "寿险", "重疾险", "意外险", "医疗险", "终身险", "中短期险", "一年期保险"];
+    
     var editingId = null;
-    var pendingDeleteId = null;
+    var selectedInsuranceTypes = [];
+    var currentVisits = [];
+    var showAllVisits = false;
+    var currentPage = 1;
+    var pageSize = 10;
 
-    // ====== 显示程序大小和修改时间 ======
-    function showProgramMeta() {
-        // 程序大小：计算当前HTML源码大小
-        var htmlContent = document.documentElement.outerHTML;
-        var sizeKB = (new Blob([htmlContent]).size / 1024).toFixed(1);
+    function getAllCustomers() { try { var d = localStorage.getItem(CUSTOMER_KEY); return d ? JSON.parse(d) : []; } catch(e) { return []; } }
+    function saveAllCustomers(customers) { localStorage.setItem(CUSTOMER_KEY, JSON.stringify(customers)); }
+    function getHistory() { try { var d = localStorage.getItem(HISTORY_KEY); return d ? JSON.parse(d) : []; } catch(e) { return []; } }
+    function saveHistory(history) { localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); }
+    function addHistory(type, content) { var h = getHistory(); h.unshift({ type: type, content: content, time: new Date().toLocaleString('zh-CN') }); if(h.length > 50) h = h.slice(0, 50); saveHistory(h); renderHistory(); }
 
-        // 上次保存/修改时间
-        var now = new Date();
-        var timeStr = now.getFullYear() + '-' +
-            ('0'+(now.getMonth()+1)).slice(-2) + '-' +
-            ('0'+now.getDate()).slice(-2) + ' ' +
-            ('0'+now.getHours()).slice(-2) + ':' +
-            ('0'+now.getMinutes()).slice(-2) + ':' +
-            ('0'+now.getSeconds()).slice(-2);
+    function getCommunities() { try { var d = localStorage.getItem(COMMUNITY_KEY); if(d) return JSON.parse(d); saveCommunities(DEFAULT_COMMUNITIES); return DEFAULT_COMMUNITIES; } catch(e) { saveCommunities(DEFAULT_COMMUNITIES); return DEFAULT_COMMUNITIES; } }
+    function saveCommunities(list) { localStorage.setItem(COMMUNITY_KEY, JSON.stringify(list)); }
+    function getInsuranceTypes() { try { var d = localStorage.getItem(INSURANCE_KEY); if(d) return JSON.parse(d); saveInsuranceTypes(DEFAULT_INSURANCE_TYPES); return DEFAULT_INSURANCE_TYPES; } catch(e) { saveInsuranceTypes(DEFAULT_INSURANCE_TYPES); return DEFAULT_INSURANCE_TYPES; } }
+    function saveInsuranceTypes(list) { localStorage.setItem(INSURANCE_KEY, JSON.stringify(list)); }
 
-        document.getElementById('programSize').textContent = '程序大小：' + sizeKB + ' KB';
-        document.getElementById('lastModified').textContent = '上次保存：' + timeStr;
-        document.getElementById('footerSize').textContent = sizeKB;
-        document.getElementById('footerTime').textContent = timeStr;
+    function generateSeq() { var c = getAllCustomers(); if(c.length === 0) return 1; return Math.max.apply(null, c.map(function(x) { return x.seq || 0; })) + 1; }
+
+    function showToast(msg, type) { var t = document.createElement('div'); t.className = 'toast ' + type; t.textContent = msg; document.body.appendChild(t); setTimeout(function() { t.remove(); }, 2500); }
+
+    function showProgramMeta() { var s = (new Blob([document.documentElement.outerHTML])).size; var kb = (s / 1024).toFixed(2); var dt = new Date().toLocaleString('zh-CN'); document.getElementById('metaBar').textContent = '程序大小: ' + kb + ' KB | 上次修改: ' + dt + ' | 作者: 军哥懂保 (微信: xunijiayuan)'; }
+
+    function addCommunity() {
+        var input = document.getElementById('newCommunityName');
+        var name = input.value.trim();
+        if(!name) { showToast('请输入小区名称', 'warning'); return; }
+        var communities = getCommunities();
+        if(communities.indexOf(name) !== -1) { showToast('该小区已存在', 'warning'); return; }
+        communities.push(name);
+        saveCommunities(communities);
+        renderCommunityList();
+        updateCommunitySelectors();
+        renderCommunityCharts();
+        input.value = '';
+        showToast('已添加小区: ' + name, 'success');
+        addHistory('小区管理', '新增小区: ' + name);
     }
 
-    /* ====== 初始化 ====== */
-    function initPage() {
-        // 填充小区下拉选项
+    function removeCommunity(name) {
+        var communities = getCommunities();
+        if(DEFAULT_COMMUNITIES.indexOf(name) !== -1) { showToast('默认小区无法删除', 'warning'); return; }
+        var customers = getAllCustomers();
+        if(customers.some(function(c) { return c.community === name; })) { showToast('该小区下存在客户，无法删除', 'warning'); return; }
+        var idx = communities.indexOf(name);
+        if(idx !== -1) {
+            communities.splice(idx, 1);
+            saveCommunities(communities);
+            renderCommunityList();
+            updateCommunitySelectors();
+            renderCommunityCharts();
+            showToast('已删除小区: ' + name, 'success');
+            addHistory('小区管理', '删除小区: ' + name);
+        }
+    }
+
+    function renderCommunityList() {
+        var communities = getCommunities();
+        var container = document.getElementById('communityList');
+        var countEl = document.getElementById('communityCountDisplay');
+        var keyword = '';
+        var searchEl = document.getElementById('communitySearch');
+        if(searchEl) keyword = searchEl.value.trim().toLowerCase();
+
+        var filtered = keyword ? communities.filter(function(c) { return c.toLowerCase().indexOf(keyword) > -1; }) : communities;
+        countEl.textContent = communities.length + (keyword ? ' (匹配' + filtered.length + ')' : '');
+
+        if(filtered.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:20px;color:#64748b;font-size:13px;">' + (keyword ? '未找到匹配的小区' : '暂无小区，请添加') + '</div>';
+            return;
+        }
+        var html = '';
+        filtered.forEach(function(name) {
+            var isDefault = DEFAULT_COMMUNITIES.indexOf(name) !== -1;
+            var tagClass = isDefault ? 'community-tag default-tag' : 'community-tag';
+            var safeName = String(name).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+            var editBtn = '<button class="edit-btn" title="修改小区名称">&#9998;</button>';
+            var removeBtn = isDefault ? '<button class="remove-btn" disabled title="默认小区不可删除">-</button>' : '<button class="remove-btn" title="删除小区">-</button>';
+            html += '<div class="' + tagClass + '" data-name="' + safeName + '"><span class="community-name">' + safeName + '</span>' + editBtn + removeBtn + '</div>';
+        });
+        container.innerHTML = html;
+
+        container.querySelectorAll('.remove-btn:not([disabled])').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var tag = this.parentElement;
+                var commName = tag.getAttribute('data-name');
+                removeCommunity(commName);
+            });
+        });
+
+        container.querySelectorAll('.edit-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var tag = this.parentElement;
+                var commName = tag.getAttribute('data-name');
+                startEditCommunity(commName, tag);
+            });
+        });
+    }
+
+    function startEditCommunity(oldName, tagEl) {
+        var nameSpan = tagEl.querySelector('.community-name');
+        var currentName = nameSpan.textContent;
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.value = currentName;
+        input.className = 'community-edit-input';
+        input.style.cssText = 'background:rgba(255,255,255,0.1);border:1px solid #60a5fa;border-radius:8px;padding:4px 8px;color:#f1f5f9;font-size:13px;outline:none;width:120px;';
+        nameSpan.style.display = 'none';
+        tagEl.insertBefore(input, nameSpan);
+        input.focus();
+        input.select();
+
+        function finishEdit(save) {
+            if(save) {
+                var newName = input.value.trim();
+                if(!newName) { showToast('小区名称不能为空', 'warning'); input.focus(); return; }
+                if(newName === oldName) { input.remove(); nameSpan.style.display = ''; return; }
+                var communities = getCommunities();
+                if(communities.indexOf(newName) !== -1) { showToast('该小区名称已存在', 'warning'); input.focus(); return; }
+                renameCommunity(oldName, newName);
+            } else {
+                input.remove();
+                nameSpan.style.display = '';
+            }
+        }
+
+        input.addEventListener('blur', function() { finishEdit(true); });
+        input.addEventListener('keydown', function(e) {
+            if(e.key === 'Enter') { e.preventDefault(); input.blur(); }
+            else if(e.key === 'Escape') { e.preventDefault(); finishEdit(false); }
+        });
+    }
+
+    function renameCommunity(oldName, newName) {
+        var communities = getCommunities();
+        var idx = communities.indexOf(oldName);
+        if(idx === -1) return;
+        communities[idx] = newName;
+        saveCommunities(communities);
+
+        var customers = getAllCustomers();
+        var updatedCount = 0;
+        customers.forEach(function(c) { if(c.community === oldName) { c.community = newName; updatedCount++; } });
+        if(updatedCount > 0) saveAllCustomers(customers);
+
+        renderCommunityList();
+        updateCommunitySelectors();
+        renderCommunityCharts();
+        renderTable();
+        showToast('小区名称已修改: ' + oldName + ' → ' + newName + (updatedCount > 0 ? ' (更新' + updatedCount + '位客户)' : ''), 'success');
+        addHistory('小区管理', '修改小区名称: ' + oldName + ' → ' + newName);
+    }
+
+    function updateCommunitySelectors() {
+        var communities = getCommunities();
         ['filterCommunity', 'customerCommunity'].forEach(function(id) {
             var sel = document.getElementById(id);
-            COMMUNITY_LIST.forEach(function(name) {
+            var cv = sel.value;
+            sel.innerHTML = '<option value="">全部小区</option>';
+            communities.forEach(function(name) {
                 var opt = document.createElement('option');
                 opt.value = name;
                 opt.textContent = name;
                 sel.appendChild(opt);
             });
+            if(communities.indexOf(cv) !== -1) sel.value = cv;
         });
-
-        showProgramMeta();
-        renderTable();
-        renderHistory();
     }
 
-    /* ====== 数据读取 ====== */
-    function getAllCustomers() {
-        try {
-            var d = localStorage.getItem(STORAGE_KEY);
-            return d ? JSON.parse(d) : [];
-        } catch(e) { return []; }
+    function addInsuranceType() {
+        var input = document.getElementById('newInsuranceType');
+        var name = input.value.trim();
+        if(!name) { showToast('请输入险种名称', 'warning'); return; }
+        var types = getInsuranceTypes();
+        if(types.indexOf(name) !== -1) { showToast('该险种已存在', 'warning'); return; }
+        types.push(name);
+        saveInsuranceTypes(types);
+        renderInsuranceTypes(selectedInsuranceTypes);
+        input.value = '';
+        showToast('已添加险种: ' + name, 'success');
+        addHistory('保险管理', '新增险种: ' + name);
     }
 
-    /* ====== 数据保存 ====== */
-    function saveAllCustomers(list) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    function toggleSelectAllInsurance() {
+        var types = getInsuranceTypes();
+        selectedInsuranceTypes = selectedInsuranceTypes.length === types.length ? [] : types.slice();
+        renderInsuranceTypes(selectedInsuranceTypes);
     }
 
-    /* ====== 序号生成 ====== */
-    function generateSeq() {
-        var list = getAllCustomers();
-        var max = 0;
-        list.forEach(function(c) { if (c.seq > max) max = c.seq; });
-        return max + 1;
+    function toggleInsuranceType(name) {
+        var idx = selectedInsuranceTypes.indexOf(name);
+        if(idx !== -1) selectedInsuranceTypes.splice(idx, 1);
+        else selectedInsuranceTypes.push(name);
+        renderInsuranceTypes(selectedInsuranceTypes);
     }
 
-    /* ====== 操作历史记录 ====== */
-    function getHistory() {
-        try {
-            var d = localStorage.getItem(HISTORY_KEY);
-            return d ? JSON.parse(d) : [];
-        } catch(e) { return []; }
-    }
-    function saveHistory(list) {
-        // 最多保留100条
-        if (list.length > 100) list = list.slice(0, 100);
-        localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
-    }
-    function addHistory(action, detail) {
-        var list = getHistory();
-        list.unshift({
-            action: action,
-            detail: detail,
-            time: new Date().toLocaleString('zh-CN')
-        });
-        saveHistory(list);
-        renderHistory();
-    }
-    function clearHistory() {
-        if (confirm('确定清空所有操作记录？')) {
-            localStorage.removeItem(HISTORY_KEY);
-            renderHistory();
-            showToast('操作记录已清空', 'info');
-        }
-    }
-    function renderHistory() {
-        var list = getHistory();
-        var container = document.getElementById('historyList');
-        if (list.length === 0) {
-            container.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted); font-style:italic;">暂无操作记录</div>';
-            return;
-        }
+    function renderInsuranceTypes(selected) {
+        selectedInsuranceTypes = selected || [];
+        var types = getInsuranceTypes();
+        var container = document.getElementById('insuranceTypesWrap');
         var html = '';
-        list.forEach(function(item) {
-            html += '<div class="history-item">' +
-                '<span class="action">' + escapeHtml(item.action) + '</span>' +
-                '<span class="detail">' + escapeHtml(item.detail) + '</span>' +
-                '<span class="time">' + escapeHtml(item.time) + '</span>' +
-                '</div>';
+        types.forEach(function(name) {
+            var isSelected = selectedInsuranceTypes.indexOf(name) !== -1;
+            var tagClass = isSelected ? 'insurance-type-tag selected' : 'insurance-type-tag';
+            html += '<label class="' + tagClass + '"><input type="checkbox" ' + (isSelected ? 'checked' : '') + ' onchange="toggleInsuranceType(\'' + name + '\')"><span>' + name + '</span></label>';
         });
         container.innerHTML = html;
     }
 
-    /* ====== 保存客户 ====== */
+    function addVisit() {
+        var date = document.getElementById('visitDate').value;
+        var note = document.getElementById('visitNote').value.trim();
+        if(!date) { showToast('请选择约访日期', 'warning'); return; }
+        if(!note) { showToast('请填写面访记录', 'warning'); return; }
+        currentVisits.push({date: date, note: note});
+        renderVisitList();
+        document.getElementById('visitDate').value = '';
+        document.getElementById('visitNote').value = '';
+        showToast('已添加约访记录', 'success');
+    }
+
+    function toggleVisitDetail(index) {
+        var items = document.querySelectorAll('.visit-item');
+        if(items[index]) items[index].classList.toggle('expanded');
+    }
+
+    function toggleShowAllVisits() {
+        showAllVisits = !showAllVisits;
+        renderVisitList();
+        var btn = document.querySelector('.visit-header button');
+        btn.textContent = showAllVisits ? '全部收起' : '全部展示';
+    }
+
+    function renderVisitList() {
+        var container = document.getElementById('visitList');
+        var countEl = document.getElementById('visitCount');
+        countEl.textContent = currentVisits.length + '次约访';
+        if(currentVisits.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:16px;color:#64748b;font-size:13px;">暂无约访记录</div>';
+            return;
+        }
+        var html = '';
+        currentVisits.forEach(function(v, i) {
+            var isExpanded = showAllVisits;
+            var itemClass = isExpanded ? 'visit-item expanded' : 'visit-item';
+            html += '<div class="' + itemClass + '" onclick="toggleVisitDetail(' + i + ')">';
+            html += '<div class="visit-item-header"><span>' + v.date + '</span><span style="font-size:11px;color:#94a3b8;">点击查看详情</span></div>';
+            html += '<div class="visit-item-content">' + v.note.replace(/\n/g, '<br>') + '</div>';
+            html += '</div>';
+        });
+        container.innerHTML = html;
+    }
+
+    function handleFileImport(input) {
+        var file = input.files[0];
+        if(!file) return;
+        var fileName = file.name.toLowerCase();
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var content = e.target.result;
+            try {
+                var data = parseImportData(content, fileName);
+                if(data && data.length > 0) {
+                    importCustomers(data);
+                } else if(data && data.length === 0) {
+                    showToast('文件中没有有效数据', 'warning');
+                }
+            } catch(err) {
+                showToast('数据解析失败: ' + err.message, 'error');
+                console.error('导入解析错误:', err);
+            }
+        };
+        reader.onerror = function() { showToast('文件读取失败', 'error'); };
+        if(fileName.endsWith('.csv')) reader.readAsText(file, 'UTF-8');
+        else if(fileName.endsWith('.xls') || fileName.endsWith('.xlsx')) reader.readAsText(file);
+        else { showToast('请选择 .csv 或 .xls 文件', 'warning'); }
+    }
+
+    function parseCSVLine(line) {
+        var result = [];
+        var current = '';
+        var inQuotes = false;
+        for(var i = 0; i < line.length; i++) {
+            var ch = line[i];
+            if(inQuotes) {
+                if(ch === '"') {
+                    if(line[i+1] === '"') { current += '"'; i++; }
+                    else { inQuotes = false; }
+                } else { current += ch; }
+            } else {
+                if(ch === '"') { inQuotes = true; }
+                else if(ch === ',') { result.push(current); current = ''; }
+                else { current += ch; }
+            }
+        }
+        result.push(current);
+        return result;
+    }
+
+    function parseImportData(content, filename) {
+        if(filename.endsWith('.csv')) {
+            var lines = content.split(/\r?\n/).filter(function(l) { return l.trim(); });
+            if(lines.length < 2) return [];
+            var headers = parseCSVLine(lines[0]).map(function(h) { return h.trim().replace(/^\uFEFF/, ''); });
+            var data = [];
+            for(var i = 1; i < lines.length; i++) {
+                var values = parseCSVLine(lines[i]);
+                var item = {};
+                headers.forEach(function(h, idx) { item[h] = values[idx] ? values[idx].trim() : ''; });
+                data.push(item);
+            }
+            return data;
+        } else if(filename.endsWith('.xls') || filename.endsWith('.xlsx')) {
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(content, 'text/html');
+            var table = doc.querySelector('table');
+            if(!table) { showToast('Excel文件中未找到表格数据', 'warning'); return []; }
+            var rows = table.querySelectorAll('tr');
+            if(rows.length < 2) return [];
+            var headerCells = rows[0].querySelectorAll('th,td');
+            var headers = [];
+            for(var h = 0; h < headerCells.length; h++) { headers.push(headerCells[h].textContent.trim()); }
+            var data = [];
+            for(var r = 1; r < rows.length; r++) {
+                var cells = rows[r].querySelectorAll('td');
+                if(cells.length === 0) continue;
+                var item = {};
+                for(var c = 0; c < headers.length; c++) {
+                    item[headers[c]] = c < cells.length ? cells[c].textContent.trim() : '';
+                }
+                data.push(item);
+            }
+            return data;
+        }
+        return [];
+    }
+
+    function importCustomers(data) {
+        var existingCustomers = getAllCustomers();
+        var importedCount = 0, skippedCount = 0;
+        data.forEach(function(item) {
+            var name = item['姓名'] || item['name'] || '';
+            var phone = item['联系电话'] || item['phone'] || item['手机号'] || '';
+            if(!name || !phone) { skippedCount++; return; }
+            if(existingCustomers.some(function(c) { return c.name === name && c.phone === phone; })) { skippedCount++; return; }
+            var insuranceStr = item['保险险种'] || item['insurance'] || '';
+            var insuranceTypes = insuranceStr ? insuranceStr.split(/[、;；,，]/).map(function(s){ return s.trim(); }).filter(function(s){ return s; }) : [];
+            var visitNotesStr = item['见面备注'] || item['约访记录'] || '';
+            var visits = parseVisits(visitNotesStr);
+            var newCustomer = {
+                id: Date.now() + Math.random(),
+                seq: generateSeq(),
+                name: name,
+                gender: item['性别'] || item['gender'] || '',
+                age: item['年龄'] || item['age'] || '',
+                birthday: item['出生年月日'] || item['出生日期'] || item['birthday'] || item['生日月份'] || '',
+                building: item['单元楼号'] || item['building'] || '',
+                phone: phone,
+                community: item['所属小区'] || item['community'] || '',
+                insuranceTypes: insuranceTypes,
+                visits: visits
+            };
+            existingCustomers.push(newCustomer);
+            importedCount++;
+        });
+        saveAllCustomers(existingCustomers);
+        renderTable();
+        renderCommunityCharts();
+        showToast('导入完成: 成功 ' + importedCount + ' 条, 跳过 ' + skippedCount + ' 条', 'success');
+        addHistory('数据导入', '导入客户数据: 成功' + importedCount + '条, 跳过' + skippedCount + '条');
+        document.getElementById('importFile').value = '';
+    }
+
+    function calculateBirthday() {
+        var age = document.getElementById('calcAge').value;
+        var monthDay = document.getElementById('birthMonthDay').value.trim();
+        var resultEl = document.getElementById('calcResult');
+        var hiddenEl = document.getElementById('customerBirthday');
+        if(!age || !monthDay) { resultEl.value = ''; hiddenEl.value = ''; return; }
+        var ageNum = parseInt(age);
+        if(isNaN(ageNum) || ageNum < 0 || ageNum > 150) { showToast('请输入有效的年龄(0-150)', 'warning'); return; }
+        var parts = monthDay.split(/[-\/.]/);
+        if(parts.length !== 2) { showToast('请输入正确格式的月日(如: 06-15)', 'warning'); return; }
+        var month = parseInt(parts[0]), day = parseInt(parts[1]);
+        if(isNaN(month) || isNaN(day) || month < 1 || month > 12 || day < 1 || day > 31) { showToast('请输入有效的月日(月:1-12,日:1-31)', 'warning'); return; }
+        var today = new Date();
+        var currentYear = today.getFullYear(), currentMonth = today.getMonth() + 1, currentDay = today.getDate();
+        var birthYear = currentYear - ageNum;
+        if(month > currentMonth || (month === currentMonth && day > currentDay)) birthYear--;
+        var monthStr = month.toString().padStart(2, '0');
+        var dayStr = day.toString().padStart(2, '0');
+        var birthdayStr = birthYear + '-' + monthStr + '-' + dayStr;
+        hiddenEl.value = birthdayStr;
+        resultEl.value = birthdayStr;
+        showToast('已计算出生年月日: ' + birthdayStr, 'success');
+    }
+
     function saveCustomer() {
         var name = document.getElementById('customerName').value.trim();
         var gender = document.getElementById('customerGender').value;
-        var age = document.getElementById('customerAge').value.trim();
+        var age = document.getElementById('calcAge').value;
         var birthday = document.getElementById('customerBirthday').value;
+        var monthDay = document.getElementById('birthMonthDay').value.trim();
         var building = document.getElementById('customerBuilding').value.trim();
         var phone = document.getElementById('customerPhone').value.trim();
         var community = document.getElementById('customerCommunity').value;
 
-        clearErrorMarks();
-        var errors = [];
-        if (!name) { markError('customerName'); errors.push('姓名'); }
-        if (!gender) { markError('customerGender'); errors.push('性别'); }
-        if (!phone) { markError('customerPhone'); errors.push('联系电话'); }
-        if (!community) { markError('customerCommunity'); errors.push('所属小区'); }
-        if (errors.length > 0) {
-            showToast('请补充必填信息：' + errors.join('、'), 'warning');
-            return;
-        }
+        if(!name) { showToast('请输入姓名', 'warning'); return; }
+        if(!gender) { showToast('请选择性别', 'warning'); return; }
+        if(!phone) { showToast('请输入联系电话', 'warning'); return; }
+        if(!community) { showToast('请选择所属小区', 'warning'); return; }
+
+        if(!birthday && monthDay) { birthday = monthDay; }
+        if(!birthday) birthday = monthDay;
 
         var customers = getAllCustomers();
+        var isEdit = !!editingId;
 
-        if (editingId !== null) {
-            for (var i = 0; i < customers.length; i++) {
-                if (customers[i].id === editingId) {
-                    var oldName = customers[i].name;
-                    customers[i].name = name;
-                    customers[i].gender = gender;
-                    customers[i].age = age;
-                    customers[i].birthday = birthday;
-                    customers[i].building = building;
-                    customers[i].phone = phone;
-                    customers[i].community = community;
-                    break;
+        var finalName = name;
+        if(!isEdit) {
+            var sameNameSameGender = customers.filter(function(c) {
+                var baseMatch = c.name.match(/^(.+?)(\d+)$/);
+                var baseName = baseMatch ? baseMatch[1] : c.name;
+                return baseName === name && c.gender === gender;
+            });
+            if(sameNameSameGender.length > 0) {
+                var num = 2;
+                while(true) {
+                    var testName = name + num;
+                    if(!customers.some(function(c) { return c.name === testName; })) {
+                        finalName = testName;
+                        break;
+                    }
+                    num++;
                 }
             }
-            saveAllCustomers(customers);
-            showToast('客户信息修改成功', 'succes
-'nity + '）');
-    dMo;
-       } else {
-            var newC = {
-             ,
-                seq: generateSeq(),
-                name: name, gender: gender, age: age,
-                birthday: birthday, building: building,
-                phone: phone, community: community
-            };
-            customers.push(newC);
-            saveAllCustomers(customers);
-            showToast('客户添加成功', 'success');
-            addHistory('新增客户', name + '（' + community + '）');
         }
 
-        clearForm();
+        var customer = {
+            id: isEdit ? editingId : Date.now(),
+            seq: isEdit ? (customers.find(function(c) { return c.id === editingId; }) || {}).seq : generateSeq(),
+            name: finalName,
+            gender: gender,
+            age: age,
+            birthday: birthday,
+            building: building,
+            phone: phone,
+            community: community,
+            insuranceTypes: selectedInsuranceTypes.slice(),
+            visits: currentVisits.slice(),
+            createdAt: isEdit ? (customers.find(function(c) { return c.id === editingId; }) || {}).createdAt : new Date().toLocaleString('zh-CN'),
+            updatedAt: new Date().toLocaleString('zh-CN')
+        };
+
+        if(isEdit) {
+            var idx = customers.findIndex(function(c) { return c.id === editingId; });
+            if(idx !== -1) customers[idx] = customer;
+        } else {
+            customers.push(customer);
+        }
+
+        saveAllCustomers(customers);
         renderTable();
+        renderCommunityCharts();
+        clearForm();
+
+        if(!isEdit && finalName !== name) {
+            showToast('客户信息已保存 (同名同姓自动编号: ' + finalName + ')', 'success');
+        } else {
+            showToast(isEdit ? '客户信息已更新' : '客户信息已保存', 'success');
+        }
+        addHistory(isEdit ? '编辑客户' : '新增客户', finalName + '(' + phone + ')');
     }
 
-    /* ====== 编辑客户 ====== */
-    fuustomer(id) {
-        var customers = getAl       var c =r i = 0; i < customers.length; i++   []= id) { c = customers[i]; break; }
-        }
-        if (!c) return;
+    function clearForm() {
+        document.getElementById('customerName').value = '';
+        document.getElementById('customerGender').value = '';
+        document.getElementById('birthMonthDay').value = '';
+        document.getElementById('customerBirthday').value = '';
+        document.getElementById('calcAge').value = '';
+        document.getElementById('calcResult').value = '';
+        document.getElementById('customerBuilding').value = '';
+        document.getElementById('customerPhone').value = '';
+        document.getElementById('customerCommunity').value = '';
+        editingId = null;
+        selectedInsuranceTypes = [];
+        currentVisits = [];
+        showAllVisits = false;
+        renderInsuranceTypes([]);
+        renderVisitList();
+        document.getElementById('customerName').focus();
+    }
 
-        document.getElementById('customerName').value = c.name;
-        document.getElementById('customerGender').value = c.gend && !.getElementById('customerg&&);Birthday').value     document.getElementById('cu hone').value = c.phone;
-        document.getElementById('customerCommunity').value = c.community;
+    function editCustomer(id) {
+        var customers = getAllCustomers();
+        var customer = customers.find(function(c) { return c.id === id; });
+        if(!customer) return;
 
         editingId = id;
-        document.getElementById('formTitle').textContent = '编辑客户（序号：' + c.seq + '）';
-        document.getElementById('editingBanner').classList.add('show');
-        document.getElementById('saveBtn').innerHTML = '&#9998; 保存修改';
-        document.getElementById('customerName').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        showToast('已进入编辑模式', 'info');
-        addHistory('进入编辑', c.name + '（序号' + c.seq + '）');
-    }
+        document.getElementById('customerName').value = customer.name;
+        document.getElementById('customerGender').value = customer.gender || '';
+        document.getElementById('calcAge').value = customer.age || '';
+        document.getElementById('customerBuilding').value = customer.building || '';
+        document.getElementById('customerPhone').value = customer.phone;
+        document.getElementById('customerCommunity').value = customer.community;
 
-    function exitEditMode() {
-        editingId = null;
-        document.getElementById('formTitle').textContent = '新增客户';
-        document.getElementById('editingBanner').classList.remove('show');
-        document.getElementById('saveBtn').innerHTML = '&#10003; 保存客户';
-    }
-
-    /* ====== 删除客户 ====== */
-    function deleteCustomer(id) {
-        pendingDeleteId = id;
-        document.getElementById('deleteModal').classList.add('show');
-    }
-    function confirmDelete() {
-        if (pendingDeleteId === null) return;
-        var customers = getAllCustomers();
-        var delName = '';
-        customers = customers.filter(function(c) {
-            if (c.id === pendingDeleteId) { delName = c.name; return false; }
-            return true;
-        });
-        saveAllCustomers(customers);
-        closeDeleteModal();
-        showToast('客户记录已删除', 'success');
-        addHistory('删除客户', delName);
-        if (editingId === pendingDeleteId) { exitEditMode(); clearForm(); }
-        renderTable();
-    }
-    function closeDeleteModal() {
-        pendingDeleteId = null;
-        document.getElementById('deleteModal').classList.remove('show');
-    }
-
-    /* ====== 清空表单 ====== */
-    function clearForm() {
-        ['customerName','customerAge','customerBuilding','customerPhone'].forEach(function(id) {
-            document.getElementById(id).value = '';
-        });
-        ['customerGender','customerCommunity'].forEach(function(id) {
-            document.getElementById(id).value = '';
-        });
-        document.getElementById('customerBirthday').value = '';
-        clearErrorMarks();
-        if (editingId !== null) exitEditMode();
-    }
-
-    /* ====== 渲染表格 ====== */
-    function renderTable() {
-        var customers = getAllCustomers();
-        var sName = document.getElementById('searchName').value.trim().toLowerCase();
-        var sCommunity = document.getElementById('filterCommunity').value;
-
-        var filtered = customers.filter(function(c) {
-            var nameOk = !sName || c.name.toLowerCase().indexOf(sName) !== -1;
-            var comOk = !sCommunity || c.community === sCommunity;
-            return nameOk && comOk;
-        });
-
-        document.getElementById('totalCount').textContent = customers.length;
-        document.getElementById('filteredCount').textContent = filtered.length;
-
-        var tbody = document.getElementById('tableBody');
-        if (filtered.length === 0) {
-            tbody.innerHTML = '<tr class="empty-state"><td colspan="9">暂无客户数据，请在上方添加</td></tr>';
-            return;
+        var birthday = customer.birthday || '';
+        document.getElementById('customerBirthday').value = birthday;
+        if(birthday.length >= 5) {
+            var parts = birthday.split('-');
+            if(parts.length === 3) {
+                document.getElementById('birthMonthDay').value = parts[1] + '-' + parts[2];
+                document.getElementById('calcResult').value = birthday;
+            } else {
+                document.getElementById('birthMonthDay').value = birthday;
+            }
+        } else {
+            document.getElementById('birthMonthDay').value = birthday;
         }
 
-        var html = '';
-        filtered.forEach(function(c) {
-            html += '<tr>' +
-                '<td>' + c.seq + '</td>' +
-                '<td>' + escapeHtml(c.name) + '</td>' +
-                '<td>' + escapeHtml(c.gender || '') + '</td>' +
-                '<td>' + escapeHtml(c.age || '') + '</td>' +
-                '<td>' + escapeHtml(c.birthday || '') + '</td>' +
-                '<td>' + escapeHtml(c.building || '') + '</td>' +
-                '<td>' + escapeHtml(c.phone || '') + '</td>' +
-                '<td>' + escapeHtml(c.community || '') + '</td>' +
-                '<td>' +
-                    '<button class="btn btn-primary btn-sm" onclick="editCustomer(' + c.id + ')">编辑</button> ' +
-                    '<button class="btn btn-danger btn-sm" onclick="deleteCustomer(' + c.id + ')">删除</button>' +
-                '</td></tr>';
+        selectedInsuranceTypes = customer.insuranceTypes ? customer.insuranceTypes.slice() : [];
+        currentVisits = customer.visits ? customer.visits.slice() : [];
+        showAllVisits = false;
+        renderInsuranceTypes(selectedInsuranceTypes);
+        renderVisitList();
+    }
+
+    function deleteCustomer(id) {
+        if(!confirm('确定要删除该客户吗？')) return;
+        var customers = getAllCustomers();
+        var customer = customers.find(function(c) { return c.id === id; });
+        if(customer) {
+            customers = customers.filter(function(c) { return c.id !== id; });
+            saveAllCustomers(customers);
+            renderTable();
+            renderCommunityCharts();
+            showToast('客户已删除', 'success');
+            addHistory('删除客户', customer.name + '(' + customer.phone + ')');
+        }
+    }
+
+    function renderTable() {
+        var customers = getAllCustomers();
+        var keyword = document.getElementById('searchInput').value.trim().toLowerCase();
+        var filterCommunity = document.getElementById('filterCommunity').value;
+        var filterGender = document.getElementById('filterGender').value;
+
+        customers = customers.filter(function(c) {
+            var matchKeyword = !keyword || c.name.toLowerCase().indexOf(keyword) > -1 || c.phone.indexOf(keyword) > -1 || c.community.indexOf(keyword) > -1;
+            var matchCommunity = !filterCommunity || c.community === filterCommunity;
+            var matchGender = !filterGender || c.gender === filterGender;
+            return matchKeyword && matchCommunity && matchGender;
         });
-        tbody.innerHTML = html;
+
+        var totalPages = Math.ceil(customers.length / pageSize);
+        currentPage = Math.min(currentPage, totalPages) || 1;
+        var startIdx = (currentPage - 1) * pageSize;
+        var endIdx = startIdx + pageSize;
+        var pageData = customers.slice(startIdx, endIdx);
+
+        var tbody = document.getElementById('tableBody');
+        if(pageData.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;padding:20px;color:#64748b;">暂无数据</td></tr>';
+        } else {
+            var html = '';
+            pageData.forEach(function(customer) {
+                var insurance = customer.insuranceTypes ? customer.insuranceTypes.join('、') : '';
+                var visitCount = customer.visits ? customer.visits.length : 0;
+                html += '<tr>';
+                html += '<td>' + customer.seq + '</td>';
+                html += '<td>' + customer.name + '</td>';
+                html += '<td>' + customer.gender + '</td>';
+                html += '<td>' + customer.age + '</td>';
+                html += '<td>' + customer.birthday + '</td>';
+                html += '<td>' + customer.community + '</td>';
+                html += '<td>' + customer.building + '</td>';
+                html += '<td>' + customer.phone + '</td>';
+                html += '<td>' + insurance + '</td>';
+                html += '<td>' + visitCount + '</td>';
+                html += '<td><div class="action-btns"><button class="btn btn-sm btn-primary" onclick="editCustomer(' + customer.id + ')">编辑</button><button class="btn btn-sm btn-danger" onclick="deleteCustomer(' + customer.id + ')">删除</button></div></td>';
+                html += '</tr>';
+            });
+            tbody.innerHTML = html;
+        }
+
+        renderPagination(totalPages);
+        updateStats();
     }
 
-    /* ====== 清空搜索 ====== */
-    function clearSearch() {
-        document.getElementById('searchName').value = '';
-        document.getElementById('filterCommunity').value = '';
-        renderTable();
+    function renderPagination(totalPages) {
+        var pagination = document.getElementById('pagination');
+        if(totalPages <= 1) { pagination.innerHTML = ''; return; }
+        var html = '<button class="btn btn-sm btn-neutral" onclick="changePage(1)"' + (currentPage === 1 ? ' disabled' : '') + '>首页</button>';
+        html += '<button class="btn btn-sm btn-neutral" onclick="changePage(' + (currentPage - 1) + ')"' + (currentPage === 1 ? ' disabled' : '') + '>上一页</button>';
+        for(var i = 1; i <= totalPages; i++) {
+            html += '<button class="btn btn-sm ' + (currentPage === i ? 'btn-primary active' : 'btn-neutral') + '" onclick="changePage(' + i + ')">' + i + '</button>';
+        }
+        html += '<button class="btn btn-sm btn-neutral" onclick="changePage(' + (currentPage + 1) + ')"' + (currentPage === totalPages ? ' disabled' : '') + '>下一页</button>';
+        html += '<button class="btn btn-sm btn-neutral" onclick="changePage(' + totalPages + ')"' + (currentPage === totalPages ? ' disabled' : '') + '>末页</button>';
+        pagination.innerHTML = html;
     }
 
-    /* ====== 导出CSV ====== */
+    function changePage(page) { currentPage = page; renderTable(); }
+
+    function updateStats() {
+        var customers = getAllCustomers();
+        document.getElementById('totalCount').textContent = customers.length;
+        document.getElementById('communityCount').textContent = getCommunities().length;
+        var today = new Date().toDateString();
+        var todayCount = customers.filter(function(c) { return c.createdAt && new Date(c.createdAt).toDateString() === today; }).length;
+        document.getElementById('todayCount').textContent = todayCount;
+    }
+
+    function renderCommunityCharts() {
+        var container = document.getElementById('communityStats');
+        var customers = getAllCustomers();
+        var communities = getCommunities();
+        
+        var stats = communities.map(function(name) {
+            return { name: name, count: customers.filter(function(c) { return c.community === name; }).length };
+        });
+
+        var total = stats.reduce(function(sum, s) { return sum + s.count; }, 0);
+        var colors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#84cc16', '#f97316', '#6366f1'];
+        
+        var html = '<div style="display:flex;flex-wrap:wrap;gap:15px;justify-content:center;">';
+        stats.forEach(function(s, i) {
+            var color = colors[i % colors.length];
+            var percentage = total > 0 ? ((s.count / total) * 100).toFixed(1) : 0;
+            html += '<div style="text-align:center;">';
+            html += '<div style="width:60px;height:60px;border-radius:50%;background:' + color + ';display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:12px;margin:0 auto 5px;">' + s.count + '</div>';
+            html += '<div style="font-size:11px;color:#94a3b8;">' + s.name + '</div>';
+            html += '<div style="font-size:10px;color:#64748b;">' + percentage + '%</div>';
+            html += '</div>';
+        });
+        html += '</div>';
+        if(total > 0) { html += '<div style="text-align:center;margin-top:15px;font-size:12px;color:#64748b;">总客户数: ' + total + '</div>'; }
+        container.innerHTML = html;
+    }
+
+    function renderHistory() {
+        var history = getHistory();
+        var container = document.getElementById('historyList');
+        if(history.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:20px;color:#64748b;font-size:13px;">暂无操作记录</div>';
+            return;
+        }
+        var html = '';
+        history.forEach(function(h) {
+            html += '<div class="history-item"><span><span class="history-type">' + h.type + '</span> ' + h.content + '</span><span class="history-time">' + h.time + '</span></div>';
+        });
+        container.innerHTML = html;
+    }
+
+    function formatVisits(visits) {
+        if(!visits || visits.length === 0) return '';
+        return visits.map(function(v) { return '[' + v.date + '] ' + (v.note || '').replace(/[\n\r]/g, ' '); }).join('; ');
+    }
+
+    function parseVisits(text) {
+        if(!text || !text.trim()) return [];
+        var visits = [];
+        var parts = text.split(/;\s*(?=\[)/);
+        parts.forEach(function(p) {
+            var match = p.match(/^\[(\d{4}-\d{2}-\d{2})\]\s*(.*)$/);
+            if(match) visits.push({ date: match[1], note: match[2].trim() });
+        });
+        return visits;
+    }
+
     function exportCSV() {
         var customers = getAllCustomers();
-        if (customers.length === 0) { showToast('暂无数据可导出', 'warning'); return; }
+        if(customers.length === 0) { showToast('暂无数据可导出', 'warning'); return; }
 
-        var csv = '\uFEFF序号,姓名,性别,年龄,生日,单元楼号,联系电话,所属小区\n';
-        customers.forEach(function(c) {
-            csv += [c.seq, csvEsc(c.name), csvEsc(c.gender||''), c.age||'',
-                c.birthday||'', csvEsc(c.building||''), csvEsc(c.phone||''),
-                csvEsc(c.community||'')].join(',') + '\n';
+        var csvContent = '\uFEFF序号,姓名,性别,年龄,出生年月日,所属小区,单元楼号,联系电话,保险险种,约访次数,见面备注\n';
+
+        customers.forEach(function(customer) {
+            var insurance = customer.insuranceTypes ? customer.insuranceTypes.join(';') : '';
+            var visitCount = customer.visits ? customer.visits.length : 0;
+            var visitNotes = formatVisits(customer.visits);
+            csvContent += customer.seq + ',' +
+                '"' + (customer.name || '').replace(/"/g, '""') + '",' +
+                '"' + (customer.gender || '').replace(/"/g, '""') + '",' +
+                '"' + (customer.age || '').replace(/"/g, '""') + '",' +
+                '"' + (customer.birthday || '').replace(/"/g, '""') + '",' +
+                '"' + (customer.community || '').replace(/"/g, '""') + '",' +
+                '"' + (customer.building || '').replace(/"/g, '""') + '",' +
+                '"' + (customer.phone || '').replace(/"/g, '""') + '",' +
+                '"' + insurance.replace(/"/g, '""') + '",' +
+                visitCount + ',' +
+                '"' + visitNotes.replace(/"/g, '""') + '"\n';
         });
 
-        var blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
-        var a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = '客户总表_' + fmtDate(new Date()) + '.csv';
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-
-        showToast('CSV导出成功，共 ' + customers.length + ' 条', 'success');
-        addHistory('导出数据', customers.length + '条记录');
-    }
-    function csvEsc(s) {
-        if (!s) return '';
-        s = String(s);
-        if (s.indexOf(',') > -1 || s.indexOf('"') > -1 || s.indexOf('\n') > -1)
-            s = '"' + s.replace(/"/g, '""') + '"';
-        return s;
-    }
-    function fmtDate(d) {
-        return d.getFullYear() + ('0'+(d.getMonth()+1)).slice(-2) + ('0'+d.getDate()).slice(-2);
+        var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        var link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = '客户数据_' + new Date().toISOString().slice(0,10) + '.csv';
+        link.click();
+        showToast('CSV导出成功', 'success');
+        addHistory('数据导出', '导出CSV文件');
     }
 
-    /* ====== 辅助函数 ====== */
-    function escapeHtml(s) {
-        if (!s) return '';
-        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-            .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-    }
-    function markError(id) { var e = document.getElementById(id); if(e) e.classList.add('error'); }
-    function clearErrorMarks() {
-        document.querySelectorAll('.error').forEach(function(e) { e.classList.remove('error'); });
-    }
-    function showToast(msg, type) {
-        var t = document.getElementById('toast');
-        t.textContent = msg;
-        t.className = 'toast toast-' + (type || 'success') + ' show';
-        setTimeout(function() { t.classList.remove('show'); }, 2500);
-    }
-
-    /* ====== 预留API接口 ======
-     * 外部程序调用接口说明：
-     * 1. addCustomerExtern(data) - 外部添加客户
-     * 2. getCustomersExtern() - 外部获取全部客户数据
-     * 3. searchCustomersExtern(keyword) - 外部搜索客户
-     * 4. deleteCustomerExtern(id) - 外部删除客户
-     * 5. onCustomerChange(callback) - 注册数据变更回调
-     */
-    var _externCallbacks = [];
-
-    function addCustomerExtern(data) {
+    function exportExcel() {
         var customers = getAllCustomers();
-        data.id = Date.now();
-        data.seq = generateSeq();
-        customers.push(data);
-        saveAllCustomers(customers);
-        renderTable();
-        addHistory('外部添加', data.name || '未知');
-        _externCallbacks.forEach(function(cb) { try { cb('add', data); } catch(e){} });
-        return { success: true, id: data.id };
-    }
+        if(customers.length === 0) { showToast('暂无数据可导出', 'warning'); return; }
 
-    function getCustomersExtern() {
-        return getAllCustomers();
-    }
+        var html = '<table><thead><tr><th>序号</th><th>姓名</th><th>性别</th><th>年龄</th><th>出生年月日</th><th>所属小区</th><th>单元楼号</th><th>联系电话</th><th>保险险种</th><th>约访次数</th><th>见面备注</th></tr></thead><tbody>';
 
-    function searchCustomersExtern(keyword) {
-        var customers = getAllCustomers();
-        var kw = (keyword || '').toLowerCase();
-        return customers.filter(function(c) {
-            return c.name.toLowerCase().indexOf(kw) > -1 ||
-                   c.phone.indexOf(kw) > -1 ||
-                   c.community.indexOf(kw) > -1;
+        customers.forEach(function(customer) {
+            var insurance = customer.insuranceTypes ? customer.insuranceTypes.join('、') : '';
+            var visitCount = customer.visits ? customer.visits.length : 0;
+            var visitNotes = formatVisits(customer.visits).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            var escapeHtml = function(s) { return (s || '').toString().replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+            html += '<tr><td>' + customer.seq + '</td><td>' + escapeHtml(customer.name) + '</td><td>' + escapeHtml(customer.gender) + '</td><td>' + escapeHtml(customer.age) + '</td><td>' + escapeHtml(customer.birthday) + '</td><td>' + escapeHtml(customer.community) + '</td><td>' + escapeHtml(customer.building) + '</td><td>' + escapeHtml(customer.phone) + '</td><td>' + escapeHtml(insurance) + '</td><td>' + visitCount + '</td><td>' + visitNotes + '</td></tr>';
         });
+
+        html += '</tbody></table>';
+
+        var blob = new Blob(['<html><head><meta charset="UTF-8"><style>table{border-collapse:collapse;width:100%;}th,td{border:1px solid #ccc;padding:8px;text-align:left;white-space:pre-wrap;}th{background:#f0f0f0;}</style></head><body>' + html + '</body></html>'], { type: 'application/vnd.ms-excel;charset=utf-8' });
+        var link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = '客户数据_' + new Date().toISOString().slice(0,10) + '.xls';
+        link.click();
+        showToast('Excel导出成功', 'success');
+        addHistory('数据导出', '导出Excel文件');
     }
 
-    function deleteCustomerExtern(id) {
-        var customers = getAllCustomers();
-        customers = customers.filter(function(c) { return c.id !== id; });
-        saveAllCustomers(customers);
+    function initPage() {
+        renderCommunityList();
+        updateCommunitySelectors();
+        renderInsuranceTypes([]);
+        renderVisitList();
+        showProgramMeta();
         renderTable();
-        _externCallbacks.forEach(function(cb) { try { cb('delete', {id: id}); } catch(e){} });
-        return { success: true };
+        renderHistory();
+        renderCommunityCharts();
     }
 
-    function onCustomerChange(callback) {
-        if (typeof callback === 'function') _externCallbacks.push(callback);
-    }
-
-    // 暴露到全局供外部调用
-    window.ZhiHuiAPI = {
-        addCustomer: addCustomerExtern,
-        getCustomers: getCustomersExtern,
-        searchCustomers: searchCustomersExtern,
-        deleteCustomer: deleteCustomerExtern,
-        onChange: onCustomerChange
-    };
-
-    /* ====== 启动 ====== */
     window.onload = initPage;
     </script>
-
 </body>
 </html>
-NumbrNumbr
