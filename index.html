@@ -264,7 +264,7 @@
                 </div>
                 <div class="table-wrapper">
                     <table id="customerTable">
-                        <thead><tr><th class="fixed-col">序号</th><th class="fixed-col">姓名</th><th class="fixed-col">性别</th><th>年龄</th><th>出生年月日</th><th>被保人姓名</th><th>被保人性别</th><th>被保人出生年月日</th><th>与客户关系</th><th>所属小区</th><th>单元楼号</th><th>联系电话</th><th>保险险种</th><th>保障内容</th><th>约访次数</th><th>操作</th></tr></thead>
+                        <thead><tr><th class="fixed-col">序号</th><th class="fixed-col">姓名</th><th class="fixed-col">性别</th><th>年龄</th><th>出生年月日</th><th>被保人姓名</th><th>被保人性别</th><th>被保人年龄</th><th>被保人出生年月日</th><th>与客户关系</th><th>所属小区</th><th>单元楼号</th><th>联系电话</th><th>保险险种</th><th>保障内容</th><th>约访次数</th><th>操作</th></tr></thead>
                         <tbody id="tableBody"></tbody>
                     </table>
                 </div>
@@ -944,7 +944,7 @@
 
         var tbody = document.getElementById('tableBody');
         if(pageData.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="16" style="text-align:center;padding:20px;color:#64748b;">暂无数据</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="17" style="text-align:center;padding:20px;color:#64748b;">暂无数据</td></tr>';
         } else {
             var html = '';
             pageData.forEach(function(customer) {
@@ -959,6 +959,7 @@
                 html += '<td>' + customer.birthday + '</td>';
                 html += '<td>' + (insured.name || '') + '</td>';
                 html += '<td>' + (insured.gender || '') + '</td>';
+                html += '<td>' + (insured.age || '') + '</td>';
                 html += '<td>' + (insured.birthday || '') + '</td>';
                 html += '<td>' + (insured.relation || '') + '</td>';
                 html += '<td>' + customer.community + '</td>';
