@@ -44,6 +44,9 @@
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
         th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid rgba(148,163,184,0.1); }
         th { background: rgba(59,130,246,0.1); color: #93c5fd; font-weight: 500; }
+        th.fixed-col { position: sticky; left: 0; z-index: 1; background: rgba(15,23,42,0.95); border-right: 1px solid rgba(59,130,246,0.3); }
+        td.fixed-col { position: sticky; left: 0; z-index: 1; background: rgba(30,41,59,0.95); border-right: 1px solid rgba(59,130,246,0.2); }
+        .table-wrapper { max-height: 500px; overflow-y: auto; position: relative; }
         tr:hover { background: rgba(59,130,246,0.05); }
         .action-btns { display: flex; gap: 6px; }
         .action-btns button { padding: 4px 10px; font-size: 12px; }
@@ -87,6 +90,9 @@
         .insurance-add-row { display: flex; gap: 10px; }
         .insurance-add-input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(148,163,184,0.15); border-radius: 10px; padding: 8px 12px; color: #f1f5f9; font-size: 13px; outline: none; }
         .insurance-add-input:focus { border-color: #a855f7; }
+        .insurance-content-row { margin-top: 12px; }
+        .insurance-content-input { width: 100%; padding: 10px 12px; border: 1px solid rgba(148,163,184,0.15); border-radius: 10px; background: rgba(255,255,255,0.05); color: #f1f5f9; font-size: 13px; outline: none; resize: vertical; min-height: 60px; }
+        .insurance-content-input:focus { border-color: #a855f7; }
         .visit-section { grid-column: 1/-1; margin-top: 8px; padding: 16px; background: rgba(236,72,153,0.05); border: 1px solid rgba(236,72,153,0.2); border-radius: 12px; }
         .visit-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .visit-header span { font-size: 14px; font-weight: 600; color: #fb7185; }
@@ -100,6 +106,8 @@
         .visit-item-header { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #fb7185; }
         .visit-item-content { margin-top: 6px; font-size: 12px; color: #cbd5e1; display: none; padding-top: 6px; border-top: 1px solid rgba(236,72,153,0.2); }
         .visit-item.expanded .visit-item-content { display: block; }
+        .insured-section { grid-column: 1/-1; margin-top: 8px; padding: 16px; background: rgba(59,130,246,0.05); border: 1px solid rgba(59,130,246,0.2); border-radius: 12px; }
+        .insured-header { margin-bottom: 12px; font-size: 14px; font-weight: 600; color: #60a5fa; }
         .import-section { grid-column: 1/-1; display: flex; align-items: center; gap: 12px; margin-top: 8px; padding: 12px 16px; background: rgba(34,197,94,0.05); border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; }
         .import-btn { position: relative; overflow: hidden; }
         .import-file-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
@@ -148,7 +156,7 @@
             <h1>智慧客户管理系统</h1>
             <p>高效管理您的客户资源</p>
         </header>
-        <div class="meta-bar" id="metaBar">程序大小: 0 KB | 上次修改: -- | 作者: 军哥懂保 (微信: xunijiayuan)</div>
+        <div class="meta-bar" id="metaBar">程序大小: 0 KB | 上次修改: -- | 作者: 鞠诗涵·平安网格 (微信: Han18783095178)</div>
 
         <section class="card">
             <div class="stats-row">
@@ -194,6 +202,20 @@
                         <div class="form-group"><label>计算结果</label><input class="form-control calc-result-input" type="text" id="calcResult" placeholder="出生年月日" readonly></div>
                     </div>
 
+                    <div class="insured-section" id="insuredSection">
+                        <div class="insured-header"><span>被保人信息</span></div>
+                        <div class="form-group"><label>被保人姓名</label><input class="form-control" type="text" id="insuredName" placeholder="请输入被保人姓名"></div>
+                        <div class="form-group"><label>被保人性别</label><select class="form-control" id="insuredGender"><option value="">请选择性别</option><option value="男">男</option><option value="女">女</option></select></div>
+                        <div class="form-group"><label>被保人出生月份和日期</label><input class="form-control" type="text" id="insuredMonthDay" placeholder="格式: MM-DD 如: 06-15" onblur="calculateInsuredBirthday()"></div>
+                        <input type="hidden" id="insuredBirthday">
+                        <div class="birthday-calc-group">
+                            <div class="form-group"><label>被保人年龄</label><input class="form-control calc-age-input" type="number" id="insuredAge" placeholder="输入年龄" min="0" max="150" oninput="calculateInsuredBirthday()"></div>
+                            <div class="form-group"><label>&nbsp;</label><button class="btn btn-sm btn-primary calc-btn" type="button" onclick="calculateInsuredBirthday()">&#8656; 计算出生年月日</button></div>
+                            <div class="form-group"><label>计算结果</label><input class="form-control calc-result-input" type="text" id="insuredCalcResult" placeholder="出生年月日" readonly></div>
+                        </div>
+                        <div class="form-group"><label>与客户关系</label><select class="form-control" id="insuredRelation"><option value="">请选择关系</option><option value="本人">本人</option><option value="配偶">配偶</option><option value="父母">父母</option><option value="子女">子女</option><option value="兄弟姐妹">兄弟姐妹</option><option value="其他">其他</option></select></div>
+                    </div>
+
                     <div class="form-group"><label>所属小区 *</label><select class="form-control" id="customerCommunity"><option value="">请选择小区</option></select></div>
                     <div class="form-group"><label>单元楼号</label><input class="form-control" type="text" id="customerBuilding" placeholder="如: 1栋2单元301"></div>
                     <div class="form-group"><label>联系电话 *</label><input class="form-control" type="tel" id="customerPhone" placeholder="请输入联系电话"></div>
@@ -204,6 +226,9 @@
                         <div class="insurance-add-row">
                             <input type="text" class="insurance-add-input" id="newInsuranceType" placeholder="输入新险种名称" onkeydown="if(event.key==='Enter')addInsuranceType()">
                             <button class="btn btn-sm btn-primary" type="button" onclick="addInsuranceType()">+ 添加</button>
+                        </div>
+                        <div class="insurance-content-row">
+                            <textarea class="insurance-content-input" id="insuranceContent" placeholder="请输入保障内容..."></textarea>
                         </div>
                     </div>
 
@@ -237,9 +262,9 @@
                     <select class="form-control" id="filterCommunity" onchange="renderTable()"><option value="">全部小区</option></select>
                     <select class="form-control" id="filterGender" onchange="renderTable()"><option value="">全部性别</option><option value="男">男</option><option value="女">女</option></select>
                 </div>
-                <div style="max-height: 500px; overflow-y: auto;">
+                <div class="table-wrapper">
                     <table id="customerTable">
-                        <thead><tr><th>序号</th><th>姓名</th><th>性别</th><th>年龄</th><th>出生年月日</th><th>所属小区</th><th>单元楼号</th><th>联系电话</th><th>保险险种</th><th>约访次数</th><th>操作</th></tr></thead>
+                        <thead><tr><th class="fixed-col">序号</th><th class="fixed-col">姓名</th><th class="fixed-col">性别</th><th>年龄</th><th>出生年月日</th><th>被保人姓名</th><th>被保人性别</th><th>被保人出生年月日</th><th>与客户关系</th><th>所属小区</th><th>单元楼号</th><th>联系电话</th><th>保险险种</th><th>保障内容</th><th>约访次数</th><th>操作</th></tr></thead>
                         <tbody id="tableBody"></tbody>
                     </table>
                 </div>
@@ -281,7 +306,7 @@
 
     function showToast(msg, type) { var t = document.createElement('div'); t.className = 'toast ' + type; t.textContent = msg; document.body.appendChild(t); setTimeout(function() { t.remove(); }, 2500); }
 
-    function showProgramMeta() { var s = (new Blob([document.documentElement.outerHTML])).size; var kb = (s / 1024).toFixed(2); var dt = new Date().toLocaleString('zh-CN'); document.getElementById('metaBar').textContent = '程序大小: ' + kb + ' KB | 上次修改: ' + dt + ' | 作者: 军哥懂保 (微信: xunijiayuan)'; }
+    function showProgramMeta() { var s = (new Blob([document.documentElement.outerHTML])).size; var kb = (s / 1024).toFixed(2); var dt = new Date().toLocaleString('zh-CN'); document.getElementById('metaBar').textContent = '程序大小: ' + kb + ' KB | 上次修改: ' + dt + ' | 作者: 鞠诗涵·平安网格 (微信: Han18783095178)'; }
 
     function addCommunity() {
         var input = document.getElementById('newCommunityName');
@@ -602,36 +627,71 @@
     function importCustomers(data) {
         var existingCustomers = getAllCustomers();
         var importedCount = 0, skippedCount = 0;
+        
+        var maxSeq = existingCustomers.length === 0 ? 0 : Math.max.apply(null, existingCustomers.map(function(x) { return x.seq || 0; }));
+        var newSeq = maxSeq;
+        
+        var newCommunities = [];
+        var existingCommunities = getCommunities();
+
         data.forEach(function(item) {
             var name = item['姓名'] || item['name'] || '';
             var phone = item['联系电话'] || item['phone'] || item['手机号'] || '';
             if(!name || !phone) { skippedCount++; return; }
             if(existingCustomers.some(function(c) { return c.name === name && c.phone === phone; })) { skippedCount++; return; }
+            
+            var community = (item['所属小区'] || item['community'] || '').trim();
+            if(community && existingCommunities.indexOf(community) === -1 && newCommunities.indexOf(community) === -1) {
+                newCommunities.push(community);
+            }
+            
             var insuranceStr = item['保险险种'] || item['insurance'] || '';
             var insuranceTypes = insuranceStr ? insuranceStr.split(/[、;；,，]/).map(function(s){ return s.trim(); }).filter(function(s){ return s; }) : [];
             var visitNotesStr = item['见面备注'] || item['约访记录'] || '';
             var visits = parseVisits(visitNotesStr);
+            
+            newSeq++;
             var newCustomer = {
-                id: Date.now() + Math.random(),
-                seq: generateSeq(),
+                id: Date.now() + Math.random() + Math.random(),
+                seq: newSeq,
                 name: name,
                 gender: item['性别'] || item['gender'] || '',
                 age: item['年龄'] || item['age'] || '',
                 birthday: item['出生年月日'] || item['出生日期'] || item['birthday'] || item['生日月份'] || '',
                 building: item['单元楼号'] || item['building'] || '',
                 phone: phone,
-                community: item['所属小区'] || item['community'] || '',
+                community: community,
                 insuranceTypes: insuranceTypes,
-                visits: visits
+                insuranceContent: item['保障内容'] || item['insuranceContent'] || '',
+                visits: visits,
+                insured: {
+                    name: item['被保人姓名'] || item['insuredName'] || '',
+                    gender: item['被保人性别'] || item['insuredGender'] || '',
+                    age: item['被保人年龄'] || item['insuredAge'] || '',
+                    birthday: item['被保人出生年月日'] || item['insuredBirthday'] || '',
+                    relation: item['与客户关系'] || item['insuredRelation'] || ''
+                },
+                createdAt: new Date().toLocaleString('zh-CN'),
+                updatedAt: new Date().toLocaleString('zh-CN')
             };
             existingCustomers.push(newCustomer);
             importedCount++;
         });
+        
+        if(newCommunities.length > 0) {
+            var allCommunities = existingCommunities.concat(newCommunities);
+            saveCommunities(allCommunities);
+            renderCommunityList();
+            showToast('自动创建新小区: ' + newCommunities.join('、'), 'success');
+        }
+        
         saveAllCustomers(existingCustomers);
         renderTable();
         renderCommunityCharts();
-        showToast('导入完成: 成功 ' + importedCount + ' 条, 跳过 ' + skippedCount + ' 条', 'success');
-        addHistory('数据导入', '导入客户数据: 成功' + importedCount + '条, 跳过' + skippedCount + '条');
+        updateCommunitySelectors();
+        
+        showToast('导入完成: 成功 ' + importedCount + ' 条, 跳过 ' + skippedCount + ' 条' + (newCommunities.length > 0 ? ', 新建小区 ' + newCommunities.length + ' 个' : ''), 'success');
+        addHistory('数据导入', '导入客户数据: 成功' + importedCount + '条, 跳过' + skippedCount + '条' + (newCommunities.length > 0 ? ', 新建小区' + newCommunities.length + '个' : ''));
         document.getElementById('importFile').value = '';
     }
 
@@ -657,6 +717,30 @@
         hiddenEl.value = birthdayStr;
         resultEl.value = birthdayStr;
         showToast('已计算出生年月日: ' + birthdayStr, 'success');
+    }
+
+    function calculateInsuredBirthday() {
+        var age = document.getElementById('insuredAge').value;
+        var monthDay = document.getElementById('insuredMonthDay').value.trim();
+        var resultEl = document.getElementById('insuredCalcResult');
+        var hiddenEl = document.getElementById('insuredBirthday');
+        if(!age || !monthDay) { resultEl.value = ''; hiddenEl.value = ''; return; }
+        var ageNum = parseInt(age);
+        if(isNaN(ageNum) || ageNum < 0 || ageNum > 150) { showToast('请输入有效的年龄(0-150)', 'warning'); return; }
+        var parts = monthDay.split(/[-\/.]/);
+        if(parts.length !== 2) { showToast('请输入正确格式的月日(如: 06-15)', 'warning'); return; }
+        var month = parseInt(parts[0]), day = parseInt(parts[1]);
+        if(isNaN(month) || isNaN(day) || month < 1 || month > 12 || day < 1 || day > 31) { showToast('请输入有效的月日(月:1-12,日:1-31)', 'warning'); return; }
+        var today = new Date();
+        var currentYear = today.getFullYear(), currentMonth = today.getMonth() + 1, currentDay = today.getDate();
+        var birthYear = currentYear - ageNum;
+        if(month > currentMonth || (month === currentMonth && day > currentDay)) birthYear--;
+        var monthStr = month.toString().padStart(2, '0');
+        var dayStr = day.toString().padStart(2, '0');
+        var birthdayStr = birthYear + '-' + monthStr + '-' + dayStr;
+        hiddenEl.value = birthdayStr;
+        resultEl.value = birthdayStr;
+        showToast('被保人出生年月日: ' + birthdayStr, 'success');
     }
 
     function saveCustomer() {
@@ -711,7 +795,15 @@
             phone: phone,
             community: community,
             insuranceTypes: selectedInsuranceTypes.slice(),
+            insuranceContent: document.getElementById('insuranceContent').value.trim(),
             visits: currentVisits.slice(),
+            insured: {
+                name: document.getElementById('insuredName').value.trim(),
+                gender: document.getElementById('insuredGender').value,
+                age: document.getElementById('insuredAge').value,
+                birthday: document.getElementById('insuredBirthday').value,
+                relation: document.getElementById('insuredRelation').value
+            },
             createdAt: isEdit ? (customers.find(function(c) { return c.id === editingId; }) || {}).createdAt : new Date().toLocaleString('zh-CN'),
             updatedAt: new Date().toLocaleString('zh-CN')
         };
@@ -746,6 +838,14 @@
         document.getElementById('customerBuilding').value = '';
         document.getElementById('customerPhone').value = '';
         document.getElementById('customerCommunity').value = '';
+        document.getElementById('insuranceContent').value = '';
+        document.getElementById('insuredName').value = '';
+        document.getElementById('insuredGender').value = '';
+        document.getElementById('insuredMonthDay').value = '';
+        document.getElementById('insuredBirthday').value = '';
+        document.getElementById('insuredAge').value = '';
+        document.getElementById('insuredCalcResult').value = '';
+        document.getElementById('insuredRelation').value = '';
         editingId = null;
         selectedInsuranceTypes = [];
         currentVisits = [];
@@ -787,6 +887,26 @@
         showAllVisits = false;
         renderInsuranceTypes(selectedInsuranceTypes);
         renderVisitList();
+        document.getElementById('insuranceContent').value = customer.insuranceContent || '';
+
+        var insured = customer.insured || {};
+        document.getElementById('insuredName').value = insured.name || '';
+        document.getElementById('insuredGender').value = insured.gender || '';
+        document.getElementById('insuredAge').value = insured.age || '';
+        document.getElementById('insuredRelation').value = insured.relation || '';
+        var insuredBirthday = insured.birthday || '';
+        document.getElementById('insuredBirthday').value = insuredBirthday;
+        if(insuredBirthday.length >= 5) {
+            var parts = insuredBirthday.split('-');
+            if(parts.length === 3) {
+                document.getElementById('insuredMonthDay').value = parts[1] + '-' + parts[2];
+                document.getElementById('insuredCalcResult').value = insuredBirthday;
+            } else {
+                document.getElementById('insuredMonthDay').value = insuredBirthday;
+            }
+        } else {
+            document.getElementById('insuredMonthDay').value = insuredBirthday;
+        }
     }
 
     function deleteCustomer(id) {
@@ -824,22 +944,28 @@
 
         var tbody = document.getElementById('tableBody');
         if(pageData.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;padding:20px;color:#64748b;">暂无数据</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="16" style="text-align:center;padding:20px;color:#64748b;">暂无数据</td></tr>';
         } else {
             var html = '';
             pageData.forEach(function(customer) {
                 var insurance = customer.insuranceTypes ? customer.insuranceTypes.join('、') : '';
                 var visitCount = customer.visits ? customer.visits.length : 0;
+                var insured = customer.insured || {};
                 html += '<tr>';
-                html += '<td>' + customer.seq + '</td>';
-                html += '<td>' + customer.name + '</td>';
-                html += '<td>' + customer.gender + '</td>';
+                html += '<td class="fixed-col">' + customer.seq + '</td>';
+                html += '<td class="fixed-col">' + customer.name + '</td>';
+                html += '<td class="fixed-col">' + customer.gender + '</td>';
                 html += '<td>' + customer.age + '</td>';
                 html += '<td>' + customer.birthday + '</td>';
+                html += '<td>' + (insured.name || '') + '</td>';
+                html += '<td>' + (insured.gender || '') + '</td>';
+                html += '<td>' + (insured.birthday || '') + '</td>';
+                html += '<td>' + (insured.relation || '') + '</td>';
                 html += '<td>' + customer.community + '</td>';
                 html += '<td>' + customer.building + '</td>';
                 html += '<td>' + customer.phone + '</td>';
                 html += '<td>' + insurance + '</td>';
+                html += '<td>' + (customer.insuranceContent || '') + '</td>';
                 html += '<td>' + visitCount + '</td>';
                 html += '<td><div class="action-btns"><button class="btn btn-sm btn-primary" onclick="editCustomer(' + customer.id + ')">编辑</button><button class="btn btn-sm btn-danger" onclick="deleteCustomer(' + customer.id + ')">删除</button></div></td>';
                 html += '</tr>';
@@ -936,21 +1062,28 @@
         var customers = getAllCustomers();
         if(customers.length === 0) { showToast('暂无数据可导出', 'warning'); return; }
 
-        var csvContent = '\uFEFF序号,姓名,性别,年龄,出生年月日,所属小区,单元楼号,联系电话,保险险种,约访次数,见面备注\n';
+        var csvContent = '\uFEFF序号,姓名,性别,年龄,出生年月日,被保人姓名,被保人性别,被保人年龄,被保人出生年月日,与客户关系,所属小区,单元楼号,联系电话,保险险种,保障内容,约访次数,见面备注\n';
 
         customers.forEach(function(customer) {
             var insurance = customer.insuranceTypes ? customer.insuranceTypes.join(';') : '';
             var visitCount = customer.visits ? customer.visits.length : 0;
             var visitNotes = formatVisits(customer.visits);
+            var insured = customer.insured || {};
             csvContent += customer.seq + ',' +
                 '"' + (customer.name || '').replace(/"/g, '""') + '",' +
                 '"' + (customer.gender || '').replace(/"/g, '""') + '",' +
                 '"' + (customer.age || '').replace(/"/g, '""') + '",' +
                 '"' + (customer.birthday || '').replace(/"/g, '""') + '",' +
+                '"' + (insured.name || '').replace(/"/g, '""') + '",' +
+                '"' + (insured.gender || '').replace(/"/g, '""') + '",' +
+                '"' + (insured.age || '').replace(/"/g, '""') + '",' +
+                '"' + (insured.birthday || '').replace(/"/g, '""') + '",' +
+                '"' + (insured.relation || '').replace(/"/g, '""') + '",' +
                 '"' + (customer.community || '').replace(/"/g, '""') + '",' +
                 '"' + (customer.building || '').replace(/"/g, '""') + '",' +
                 '"' + (customer.phone || '').replace(/"/g, '""') + '",' +
                 '"' + insurance.replace(/"/g, '""') + '",' +
+                '"' + (customer.insuranceContent || '').replace(/"/g, '""') + '",' +
                 visitCount + ',' +
                 '"' + visitNotes.replace(/"/g, '""') + '"\n';
         });
@@ -968,14 +1101,15 @@
         var customers = getAllCustomers();
         if(customers.length === 0) { showToast('暂无数据可导出', 'warning'); return; }
 
-        var html = '<table><thead><tr><th>序号</th><th>姓名</th><th>性别</th><th>年龄</th><th>出生年月日</th><th>所属小区</th><th>单元楼号</th><th>联系电话</th><th>保险险种</th><th>约访次数</th><th>见面备注</th></tr></thead><tbody>';
+        var html = '<table><thead><tr><th>序号</th><th>姓名</th><th>性别</th><th>年龄</th><th>出生年月日</th><th>被保人姓名</th><th>被保人性别</th><th>被保人年龄</th><th>被保人出生年月日</th><th>与客户关系</th><th>所属小区</th><th>单元楼号</th><th>联系电话</th><th>保险险种</th><th>保障内容</th><th>约访次数</th><th>见面备注</th></tr></thead><tbody>';
 
         customers.forEach(function(customer) {
             var insurance = customer.insuranceTypes ? customer.insuranceTypes.join('、') : '';
             var visitCount = customer.visits ? customer.visits.length : 0;
             var visitNotes = formatVisits(customer.visits).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            var insured = customer.insured || {};
             var escapeHtml = function(s) { return (s || '').toString().replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
-            html += '<tr><td>' + customer.seq + '</td><td>' + escapeHtml(customer.name) + '</td><td>' + escapeHtml(customer.gender) + '</td><td>' + escapeHtml(customer.age) + '</td><td>' + escapeHtml(customer.birthday) + '</td><td>' + escapeHtml(customer.community) + '</td><td>' + escapeHtml(customer.building) + '</td><td>' + escapeHtml(customer.phone) + '</td><td>' + escapeHtml(insurance) + '</td><td>' + visitCount + '</td><td>' + visitNotes + '</td></tr>';
+            html += '<tr><td>' + customer.seq + '</td><td>' + escapeHtml(customer.name) + '</td><td>' + escapeHtml(customer.gender) + '</td><td>' + escapeHtml(customer.age) + '</td><td>' + escapeHtml(customer.birthday) + '</td><td>' + escapeHtml(insured.name) + '</td><td>' + escapeHtml(insured.gender) + '</td><td>' + escapeHtml(insured.age) + '</td><td>' + escapeHtml(insured.birthday) + '</td><td>' + escapeHtml(insured.relation) + '</td><td>' + escapeHtml(customer.community) + '</td><td>' + escapeHtml(customer.building) + '</td><td>' + escapeHtml(customer.phone) + '</td><td>' + escapeHtml(insurance) + '</td><td>' + escapeHtml(customer.insuranceContent) + '</td><td>' + visitCount + '</td><td>' + visitNotes + '</td></tr>';
         });
 
         html += '</tbody></table>';
